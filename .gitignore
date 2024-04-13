@@ -70,3 +70,13 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+# End of https://www.toptal.com/developers/gitignore/api/unity
+
+# Unity Recorder captures folder
+/Recordings/
+
+# HotReload
+/Packages/com.singularitygroup.hotreload/
+/Assets/HotReload/
+/Assets/HotReload.meta
