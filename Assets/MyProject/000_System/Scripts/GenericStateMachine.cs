@@ -6,8 +6,8 @@ public class GenericStateMachine : MonoBehaviour
 {
     public enum UpdateTypes
     {
-        [InspectorName("自動実行")]Auto,   //Update系自動で実行
-        [InspectorName("手動実行")]Manual  //Update系手動で実行
+        [InspectorName("閾ｪ蜍俵pdate")]Auto,
+        [InspectorName("謇句虚Update")]Manual
     }
     [SerializeField] UpdateTypes _updateType;
     StateBase _nowState = null;
@@ -23,7 +23,7 @@ public class GenericStateMachine : MonoBehaviour
         _animator=GetComponent<Animator>();
     }
     //==============================
-    //アクション用のステートクラス
+    //繧ｹ繝�繝ｼ繝医�槭す繝ｳ
     //==============================
     public class StateBase
     {
@@ -33,13 +33,9 @@ public class GenericStateMachine : MonoBehaviour
         {
             StateMachine = stateMachine;
         }
-        //ステート開始時
         virtual public void OnEnter() { }
-        //ステート終了時
         virtual public void OnExit() { }
-        //毎フレーム
         virtual public void OnUpdate() { }
-        //一定間隔
         virtual public void OnFixedUpdate() { }
     }
 
