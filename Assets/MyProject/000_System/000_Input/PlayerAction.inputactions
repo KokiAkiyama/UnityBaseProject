@@ -6,20 +6,135 @@
             "id": "d4cc32bf-b311-4662-b8bc-f2413e2e7e11",
             "actions": [
                 {
-                    "name": "CamRot",
+                    "name": "CamMoveX",
+                    "type": "Value",
+                    "id": "0cbde57a-f7be-4402-b6cf-935e5f056c81",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "CamMoveY",
+                    "type": "Value",
+                    "id": "36a0cd78-62ab-4124-85c6-fa73d0c67f21",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "CamRotButton",
                     "type": "Button",
-                    "id": "7452c2de-0c9c-4a95-b54a-ca80494ea341",
+                    "id": "26ca8316-3724-4130-8a74-5a04c55beed9",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "CamRot",
+                    "type": "Value",
+                    "id": "0d11c7e3-9da5-4c8c-98cf-1ef2e3bd7992",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
                 {
                     "name": "",
-                    "id": "dbb90907-05f9-4066-b6f3-0d1e406fc873",
-                    "path": "",
+                    "id": "474aff81-454f-4fc0-bf95-e58a7aa98abe",
+                    "path": "<Keyboard>/rightMeta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CamRotButton",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a1883d84-51b4-4ab4-95dc-f75ef6288acb",
+                    "path": "<Keyboard>/leftCtrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CamRotButton",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "Keyboad",
+                    "id": "22694f26-eed1-4391-90dd-c19625f11efd",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CamMoveY",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "55dc3825-538b-4c65-86da-712b206b62d0",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CamMoveY",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "53ef4526-fb1f-42a7-b9ec-87c0edfffa54",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CamMoveY",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Keyboad",
+                    "id": "22f4dfa8-87ba-40a5-945d-97de7817e0d1",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CamMoveX",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "9edb6429-5b21-45f6-8ad5-a16c180604b3",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CamMoveX",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "5b2e528c-c2e3-41f4-9033-22cf40ea4e20",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CamMoveX",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "36d00f06-65f0-418b-8d53-6bc52be9ccb2",
+                    "path": "<Mouse>/rightButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

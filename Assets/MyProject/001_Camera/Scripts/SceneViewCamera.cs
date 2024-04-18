@@ -56,9 +56,9 @@ public class SceneViewCamera : MonoBehaviour
         Vector3 diff = mousePos - preMousePos;
 
         if (diff.magnitude < Vector3.kEpsilon) return;
-
         
-        else if (Input.GetMouseButton(0) && Input.GetKey(KeyCode.LeftCommand))
+        
+        else if (Input.GetMouseButton(1) && GameManager.Instance.InputManager.Game["CamRotButton"].IsPressed())
         {
             CameraRotate(new Vector2(-diff.y, diff.x) * rotateSpeed);
         }
@@ -69,8 +69,10 @@ public class SceneViewCamera : MonoBehaviour
     private void AxisUpdate()
     {
         
-        float vertical   = Input.GetAxisRaw("Vertical");
-        float horizontal = Input.GetAxisRaw("Horizontal");
+        // float vertical   = Input.GetAxisRaw("Vertical");
+        // float horizontal = Input.GetAxisRaw("Horizontal");
+        float horizontal = GameManager.Instance.InputManager.Game["CamMoveX"].ReadValue<float>();
+        float vertical   = GameManager.Instance.InputManager.Game["CamMoveY"].ReadValue<float>();
         transform.Translate(new Vector3(0.0f, vertical * Time.unscaledDeltaTime * moveSpeed, 0.0f));
         transform.Translate(new Vector3(horizontal * Time.unscaledDeltaTime * moveSpeed, 0.0f, 0.0f));
     }
