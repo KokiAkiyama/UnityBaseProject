@@ -1,0 +1,34 @@
+{
+    "name": "PlayerAction",
+    "maps": [
+        {
+            "name": "Game",
+            "id": "d4cc32bf-b311-4662-b8bc-f2413e2e7e11",
+            "actions": [
+                {
+                    "name": "CamRot",
+                    "type": "Button",
+                    "id": "7452c2de-0c9c-4a95-b54a-ca80494ea341",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "dbb90907-05f9-4066-b6f3-0d1e406fc873",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CamRot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
