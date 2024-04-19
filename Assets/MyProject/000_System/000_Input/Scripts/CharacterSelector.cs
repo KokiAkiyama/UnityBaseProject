@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UniRx;
 
 public class CharacterSelector : MonoBehaviour
 {
     [SerializeField]
-    private List<CharacterBrain> selectedList;
+    private ReactiveCollection<CharacterBrain> selectedList=new();
 
     [SerializeField]
     LayerMask selectLayer;
@@ -14,15 +15,52 @@ public class CharacterSelector : MonoBehaviour
     LayerMask stageLayer;
 
     [SerializeField] Material selectMaterial;
-    List<SkinnedMeshRenderer> renderers;
-    List<Material> prevMaterials;
+
+    //レンダラーの情報を保存する
+    public class RendererStrage
+    {
+        public RendererStrage(List<Material> mats, List<Renderer> rends)
+        {
+            materials = mats;
+            renderers = rends;
+        }
+        public List<Material> materials;
+        public List<Renderer> renderers;
+
+    }
 
 
-    Dictionary<CharacterBrain,List<Material>> rendererDic;
+    Dictionary<CharacterBrain, RendererStrage> rendererDic=new();
     // Start is called before the first frame update
     void Start()
     {
-        
+        selectedList.
+        ObserveAdd().
+        Subscribe(characterBrain =>
+        {
+            SetSelectMaterial(characterBrain.Value);
+
+        }).AddTo(this);
+
+        selectedList.ObserveReset().
+            Subscribe(_ =>
+            {
+                foreach(var pair in rendererDic)
+                {
+                    ResetMaterials(pair.Key);
+                }
+                
+
+            }).AddTo(this);
+
+        selectedList.
+        ObserveRemove().
+        Subscribe(characterBrain =>
+        {
+            ResetMaterials(characterBrain.Value);
+
+        }).AddTo(this);
+
     }
 
     // Update is called once per frame
@@ -97,23 +135,39 @@ public class CharacterSelector : MonoBehaviour
 
     void SetSelectMaterial(CharacterBrain characterBrain)
     {
-        renderers=characterBrain.GetComponentsInChildren<SkinnedMeshRenderer>().ToList();
+        List<Renderer> renderers = null;
+        List<Material> prevMaterials = new();
+        bool inDic = rendererDic.ContainsKey(characterBrain);
+        if (inDic)
+        {
+            renderers = rendererDic[characterBrain].renderers;
+        }
+        else
+        {
+            renderers = characterBrain.GetComponentsInChildren<Renderer>().ToList();
 
+        }
+        
         foreach(var renderer in renderers)
         {
-            prevMaterials.Add(renderer.material);
+            if(inDic==false)
+            {
+                prevMaterials.Add(renderer.material);
+            }
             renderer.material=selectMaterial;
         }
-
-        //rendererDic.Add(characterBrain,renderers);
+        rendererDic[characterBrain] = new RendererStrage(inDic==false?prevMaterials: rendererDic[characterBrain].materials, renderers);
         
     }
     void ResetMaterials(CharacterBrain characterBrain)
     {
-        var renderers=rendererDic[characterBrain];
+        if (rendererDic.ContainsKey(characterBrain) == false) { return; }
+
+        var renderers = rendererDic[characterBrain].renderers;
+        var prevMaterials = rendererDic[characterBrain].materials;
         for(int i=0;i<renderers.Count;++i)
         {
-            //renderers[i].material=prevMaterials[i];
+            renderers[i].material=prevMaterials[i];
         }
     }
 }

@@ -166,10 +166,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37e0f06ce18e84f6aa166840c1febb10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedList: []
   selectLayer:
     serializedVersion: 2
     m_Bits: 64
   stageLayer:
     serializedVersion: 2
     m_Bits: 256
+  selectMaterial: {fileID: 2100000, guid: 266d745742ad944b29467f6a00c17c5b, type: 2}
