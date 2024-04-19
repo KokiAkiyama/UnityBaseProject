@@ -84,7 +84,7 @@ MonoBehaviour:
         serializedVersion: 2
         m_Bits: 4224
       PassNames: []
-    overrideMaterial: {fileID: 2100000, guid: e5256c98a7673cc4887ec97cbcbe9ddf, type: 2}
+    overrideMaterial: {fileID: 2100000, guid: f3f811b1b5f4cf5499f115e1fd3f9b65, type: 2}
     overrideMaterialPassIndex: 0
     overrideShader: {fileID: 0}
     overrideShaderPassIndex: 0

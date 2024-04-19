@@ -12,6 +12,13 @@ public class CharacterSelector : MonoBehaviour
     LayerMask selectLayer;
     [SerializeField]
     LayerMask stageLayer;
+
+    [SerializeField] Material selectMaterial;
+    List<SkinnedMeshRenderer> renderers;
+    List<Material> prevMaterials;
+
+
+    Dictionary<CharacterBrain,List<Material>> rendererDic;
     // Start is called before the first frame update
     void Start()
     {
@@ -84,7 +91,29 @@ public class CharacterSelector : MonoBehaviour
         foreach (Transform transform in go.transform)
         {
             if (transform.gameObject.name == "Other") { continue; }
-            SetLayer(transform.gameObject, stageLayer);
+            SetLayer(transform.gameObject, layer);
+        }
+    }
+
+    void SetSelectMaterial(CharacterBrain characterBrain)
+    {
+        renderers=characterBrain.GetComponentsInChildren<SkinnedMeshRenderer>().ToList();
+
+        foreach(var renderer in renderers)
+        {
+            prevMaterials.Add(renderer.material);
+            renderer.material=selectMaterial;
+        }
+
+        //rendererDic.Add(characterBrain,renderers);
+        
+    }
+    void ResetMaterials(CharacterBrain characterBrain)
+    {
+        var renderers=rendererDic[characterBrain];
+        for(int i=0;i<renderers.Count;++i)
+        {
+            //renderers[i].material=prevMaterials[i];
         }
     }
 }

@@ -98,7 +98,7 @@ public class CharacterBrain : MonoBehaviour
         public override void OnUpdate()
         {
             Vector3 vMove = Brain.inputProvider.MoveVector;
-            //��
+            //停止
             if (vMove.magnitude<=stopMagnitude)
             {
                 Brain.animator.SetInteger("StateType", (int)StateType.Idle);
