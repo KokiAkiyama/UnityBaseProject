@@ -27,6 +27,9 @@ public class CharacterBrain : MonoBehaviour
 
     MainObjectData mainObjectData;
     public MainObjectData MainObjectData=>mainObjectData;
+
+    [SerializeField]CharacterIDs ID;
+
     public void AddRootMotionDelta(ref Vector3 v)
     {
         rootMotionDaltaPosition += v;

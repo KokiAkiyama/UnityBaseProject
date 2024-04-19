@@ -194,7 +194,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4493914613880827488, guid: 6dc4cf4496348884d8ee27743ae38562,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1040399022}
   m_SourcePrefab: {fileID: 100100000, guid: 6dc4cf4496348884d8ee27743ae38562, type: 3}
 --- !u!4 &292977246 stripped
 Transform:
@@ -584,12 +588,32 @@ MonoBehaviour:
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: c9fa8fa0b27a641bb941afc1571636bd, type: 2}
   m_BuildHeightMesh: 0
+--- !u!1 &1040399020 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4493914613880827488, guid: 6dc4cf4496348884d8ee27743ae38562,
+    type: 3}
+  m_PrefabInstance: {fileID: 292977245}
+  m_PrefabAsset: {fileID: 0}
 --- !u!95 &1040399021 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 7389507112651452681, guid: 6dc4cf4496348884d8ee27743ae38562,
     type: 3}
   m_PrefabInstance: {fileID: 292977245}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1040399022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1040399020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c6bcb8b81d4d4362837e16756527800, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tarnsformDic:
+    _list: []
 --- !u!850595691 &1041043302
 LightingSettings:
   m_ObjectHideFlags: 0
@@ -784,6 +808,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8943488498782573228, guid: c29883eb9819740c2bc4d71a0240fe78,
         type: 3}
+      propertyPath: ID
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8943488498782573228, guid: c29883eb9819740c2bc4d71a0240fe78,
+        type: 3}
       propertyPath: animator
       value: 
       objectReference: {fileID: 1040399021}
@@ -791,11 +820,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsTrigger
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5313271910478498921, guid: c29883eb9819740c2bc4d71a0240fe78,
-        type: 3}
-      propertyPath: m_StoppingDistance
-      value: 0.01
       objectReference: {fileID: 0}
     - target: {fileID: 6993202032414110790, guid: c29883eb9819740c2bc4d71a0240fe78,
         type: 3}
