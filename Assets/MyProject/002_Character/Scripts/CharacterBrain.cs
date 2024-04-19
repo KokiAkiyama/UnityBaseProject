@@ -23,6 +23,10 @@ public class CharacterBrain : MonoBehaviour
     [SerializeField] float moveSpeed=2.0f;
     [SerializeField] float rotSpeed=600.0f;
 
+    const float stopMagnitude=0.2f;
+
+    MainObjectData mainObjectData;
+    public MainObjectData MainObjectData=>mainObjectData;
     public void AddRootMotionDelta(ref Vector3 v)
     {
         rootMotionDaltaPosition += v;
@@ -79,7 +83,7 @@ public class CharacterBrain : MonoBehaviour
             Vector3 vMove = Brain.inputProvider.MoveVector;
 
             //歩き
-            if (vMove.magnitude > 0.2f)
+            if (vMove.magnitude > stopMagnitude)
             {
                 Brain.animator.SetInteger("StateType", (int)StateType.Walk);
             }
@@ -92,7 +96,7 @@ public class CharacterBrain : MonoBehaviour
         {
             Vector3 vMove = Brain.inputProvider.MoveVector;
             //��
-            if (vMove.magnitude<=0.2f)
+            if (vMove.magnitude<=stopMagnitude)
             {
                 Brain.animator.SetInteger("StateType", (int)StateType.Idle);
                 return;

@@ -58,7 +58,7 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
         public override void OnUpdate()
         {
             base.OnUpdate();
-
+            AIInputProvider.moveVec=Vector3.zero;
             if(AIInputProvider.pathFinding.IsAlived==false)
             {
                 AIInputProvider.animator.SetInteger("StateType" ,(int)StateType.Move);
