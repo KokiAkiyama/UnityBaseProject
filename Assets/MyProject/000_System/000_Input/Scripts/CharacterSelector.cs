@@ -1,13 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class CharacterSelector : MonoBehaviour
 {
     [SerializeField]
-    private List<CharacterBrain> m_selectedList;
+    private List<CharacterBrain> selectedList;
 
-    LayerMask layer;
+    [SerializeField]
+    LayerMask selectLayer;
+    [SerializeField]
+    LayerMask stageLayer;
     // Start is called before the first frame update
     void Start()
     {
@@ -18,39 +22,69 @@ public class CharacterSelector : MonoBehaviour
     void Update()
     {
         SelectCharacter();
+        MoveCharacter();
     }
 
-    private void SelectCharacter()
+    void SelectCharacter()
     {
         if (Input.GetMouseButtonDown(0))
         {
+            selectedList.Clear();
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             bool isHit = Physics.Raycast(
                  ray: ray,
                  hitInfo: out RaycastHit hit,
                  maxDistance: Mathf.Infinity,
-                 layerMask: layer
+                 layerMask: selectLayer
              );
 
             if (isHit)
             {
-
+                var character= hit.collider.GetComponent<CharacterBrain>();
+                if(character && selectedList.Contains(character)==false)
+                {
+                    selectedList.Add(character);
+                }
 
 
             }
         }
     }
 
+    void MoveCharacter()
+    {
+        if(selectedList.Count<=0)return;
+        if(GameManager.Instance.InputManager.Game["CamRotButton"].WasPerformedThisFrame()){return;}
+        if (Input.GetMouseButtonDown(1))
+        {
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                bool isHit = Physics.Raycast(
+                 ray: ray,
+                 hitInfo: out RaycastHit hit,
+                 maxDistance: Mathf.Infinity,
+                 layerMask: stageLayer
+             );
 
-    //ˆø”‚ÌƒQ[ƒ€ƒIƒuƒWƒFƒNƒg‚Æ‚»‚ÌŽqƒIƒuƒWƒFƒNƒg‚ÌƒŒƒCƒ„[Ý’è
-    private void SetLayer(GameObject go, int layer)
+            if (isHit)
+            {
+                foreach(var character in selectedList)
+                {
+                    character.AIInputProvider.SetDestination(hit.point);
+                }
+            }
+        }
+
+    }
+
+    //ã‚¢ã‚¦ãƒˆãƒ©ã‚¤ãƒ³ç”¨ã®ãƒ¬ã‚¤ãƒ¤ãƒ¼åˆ‡ã‚Šæ›¿ãˆ
+    void SetLayer(GameObject go, int layer)
     {
         go.layer = layer;
         foreach (Transform transform in go.transform)
         {
             if (transform.gameObject.name == "Other") { continue; }
-            SetLayer(transform.gameObject, layer);
+            SetLayer(transform.gameObject, stageLayer);
         }
     }
 }

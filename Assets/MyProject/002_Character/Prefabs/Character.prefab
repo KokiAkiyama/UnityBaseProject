@@ -48,8 +48,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f76a3802231b0421685a2cb7c76e6386, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _eyeSight: {fileID: 5690782098575105404}
-  _pathFinding: {fileID: 4436956423103061562}
+  eyeSight: {fileID: 5690782098575105404}
+  pathFinding: {fileID: 4436956423103061562}
 --- !u!114 &5690782098575105404
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -144,7 +144,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 0
+  m_StoppingDistance: 0.01
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -223,7 +223,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0

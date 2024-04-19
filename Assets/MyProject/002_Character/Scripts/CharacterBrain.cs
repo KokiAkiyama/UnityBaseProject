@@ -6,15 +6,23 @@ using UniRx.Triggers;
 
 public class CharacterBrain : MonoBehaviour
 {
+    public enum StateType
+    {
+        Idle,
+        Walk
+    }
+
     [SerializeField] GameObject aiInput;
     IInputProvider inputProvider;
-    Rigidbody rigidbody;
-    
+    public AIInputProvider AIInputProvider{get;private set;}
     [SerializeField] Animator animator;
     GenericStateMachine stateMachine;
     Vector3 moveValue;
-    Vector3 velocity;
     Vector3 rootMotionDaltaPosition=Vector3.zero;
+
+    [SerializeField] float moveSpeed=2.0f;
+    [SerializeField] float rotSpeed=600.0f;
+
     public void AddRootMotionDelta(ref Vector3 v)
     {
         rootMotionDaltaPosition += v;
@@ -23,24 +31,25 @@ public class CharacterBrain : MonoBehaviour
     void Awake()
     {
         TryGetComponent(out stateMachine);
-        TryGetComponent(out rigidbody);
     }
 
     void Start()
     {
         inputProvider=aiInput.GetComponent<IInputProvider>();
-
+        AIInputProvider=inputProvider as AIInputProvider;
         this.UpdateAsObservable()
         .Where(_=>enabled)
         .Subscribe(_=>
         {
             stateMachine.DoUpdate();
-            rigidbody.velocity=moveValue+velocity;
-            rigidbody.velocity+=rootMotionDaltaPosition;
+            transform.position+=moveValue*Time.deltaTime;
+            transform.position+=rootMotionDaltaPosition*Time.deltaTime;
             rootMotionDaltaPosition=Vector3.zero;
 
 
-            rigidbody.velocity=new Vector3(rigidbody.velocity.x,0f,rigidbody.velocity.z);
+            transform.position=new Vector3(transform.position.x,0f,transform.position.z);
+
+            moveValue=Vector3.zero;
         }
         );
         this.FixedUpdateAsObservable()
@@ -69,14 +78,10 @@ public class CharacterBrain : MonoBehaviour
         {
             Vector3 vMove = Brain.inputProvider.MoveVector;
 
-            //��
+            //歩き
             if (vMove.magnitude > 0.2f)
             {
-                Brain.animator.SetFloat("MoveSpeed", vMove.magnitude);
-            }
-            else
-            {
-                Brain.animator.SetFloat("MoveSpeed", 0.0f);
+                Brain.animator.SetInteger("StateType", (int)StateType.Walk);
             }
         }
     }
@@ -89,14 +94,15 @@ public class CharacterBrain : MonoBehaviour
             //��
             if (vMove.magnitude<=0.2f)
             {
-                Brain.animator.SetFloat("MoveSpeed", vMove.magnitude);
+                Brain.animator.SetInteger("StateType", (int)StateType.Idle);
+                return;
             }
-            Brain.moveValue = vMove*2.0f;
+            Brain.moveValue = vMove*Brain.moveSpeed;
             
             Quaternion qRota = Quaternion.RotateTowards(
                 Brain.transform.rotation,      
                 Quaternion.LookRotation(vMove),
-                600*Time.deltaTime      
+                Brain.rotSpeed*Time.deltaTime      
                 );
             Brain.transform.rotation=qRota;
         }

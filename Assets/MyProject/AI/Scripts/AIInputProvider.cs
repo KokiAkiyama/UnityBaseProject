@@ -3,14 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Triggers;
+using Unity.VisualScripting;
 public class AIInputProvider : MonoBehaviour, IInputProvider
 {
-    Vector3 _moveVec;
-    public Vector3 MoveVector => _moveVec;
+    public enum StateType
+    {
+        Wait,
+        Move
+    }
 
-    [SerializeField] AIEyeSight _eyeSight;
-    [SerializeField] AIPathFinding _pathFinding;
+    Vector3 moveVec;
+    public Vector3 MoveVector => moveVec;
 
+    [SerializeField] AIEyeSight eyeSight;
+    [SerializeField] AIPathFinding pathFinding;
+    Animator animator;
 
     MainObjectData _targetChara;
     public bool IsAttack
@@ -20,6 +27,17 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
             return false;
         }
     }
+
+    public void SetDestination(Vector3 pos)
+    {
+        pathFinding.SetDestination(pos);
+    }
+
+    void Awake()
+    {
+       TryGetComponent(out animator);
+    }
+
 
     [System.Serializable]
     public abstract class AISBase:GenericStateMachine.StateBase
@@ -41,12 +59,11 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
         {
             base.OnUpdate();
 
-            if(AIInputProvider._pathFinding.IsAlived==false)
+            if(AIInputProvider.pathFinding.IsAlived==false)
             {
-                
+                AIInputProvider.animator.SetInteger("StateType" ,(int)StateType.Move);
                 return;
             }
-
         }
     }
 
@@ -55,17 +72,22 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
     { 
         public override void OnUpdate()
         {
+            if(AIInputProvider.pathFinding.IsAlived)
+            {
+                AIInputProvider.animator.SetInteger("StateType" ,(int)StateType.Wait);
+                AIInputProvider.moveVec=Vector3.zero;
+                return;
+            }
             base.OnUpdate();
 
-
-            AIInputProvider._pathFinding.SetDestination(AIInputProvider._targetChara.transform.position);
-            
-            var dir = AIInputProvider._pathFinding.DesiredVelecity;
+            var dir = AIInputProvider.pathFinding.DesiredVelecity;
             dir.y = 0f;
             if (dir.sqrMagnitude >= 1.0f) dir.Normalize();
 
-            AIInputProvider._moveVec = dir;
+            AIInputProvider.moveVec = dir;
 
+
+            
         }
     }
 
