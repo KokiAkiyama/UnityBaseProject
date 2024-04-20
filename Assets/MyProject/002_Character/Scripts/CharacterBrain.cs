@@ -25,7 +25,7 @@ public class CharacterBrain : MonoBehaviour
 
     const float stopMagnitude=0.2f;
 
-    MainObjectData mainObjectData;
+    [SerializeField]MainObjectData mainObjectData;
     public MainObjectData MainObjectData=>mainObjectData;
 
     [SerializeField]CharacterIDs ID;

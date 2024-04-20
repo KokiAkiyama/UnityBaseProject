@@ -179,6 +179,7 @@ GameObject:
   - component: {fileID: 8757457664781113493}
   - component: {fileID: 2725655945968411667}
   - component: {fileID: 3479246375605751373}
+  - component: {fileID: 1352192898865312136}
   m_Layer: 6
   m_Name: Character
   m_TagString: Untagged
@@ -224,10 +225,10 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 122
   m_CollisionDetection: 0
 --- !u!136 &5107502433783529018
 CapsuleCollider:
@@ -268,6 +269,7 @@ MonoBehaviour:
   animator: {fileID: 0}
   moveSpeed: 2
   rotSpeed: 600
+  mainObjectData: {fileID: 1352192898865312136}
   ID: 0
 --- !u!95 &8757457664781113493
 Animator:
@@ -326,3 +328,17 @@ CapsuleCollider:
   m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1352192898865312136
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6993202032414110790}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55aaa09e036823241b2e4f16d1efe7f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _groupID: 2
+  _name: 

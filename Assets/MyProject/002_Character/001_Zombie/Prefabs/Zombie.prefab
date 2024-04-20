@@ -127,6 +127,11 @@ PrefabInstance:
       propertyPath: animator
       value: 
       objectReference: {fileID: 689230025080058486}
+    - target: {fileID: 1352192898865312136, guid: c29883eb9819740c2bc4d71a0240fe78,
+        type: 3}
+      propertyPath: _groupID
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5107502433783529018, guid: c29883eb9819740c2bc4d71a0240fe78,
         type: 3}
       propertyPath: m_IsTrigger
@@ -135,7 +140,7 @@ PrefabInstance:
     - target: {fileID: 6993202032414110790, guid: c29883eb9819740c2bc4d71a0240fe78,
         type: 3}
       propertyPath: m_Name
-      value: Character Variant
+      value: Zombie
       objectReference: {fileID: 0}
     - target: {fileID: 7017909954329941245, guid: c29883eb9819740c2bc4d71a0240fe78,
         type: 3}

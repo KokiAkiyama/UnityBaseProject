@@ -6,9 +6,9 @@ public class MainObjectData : MonoBehaviour
 {
     public enum GroupIDs
     {
-        Group00,
-        Group01,
-        Group02,
+        Player,
+        Enemy,
+        Neutral,
         Group03,
         Group99=99,
     }
