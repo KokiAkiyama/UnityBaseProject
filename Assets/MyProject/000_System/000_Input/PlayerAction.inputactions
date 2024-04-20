@@ -66,6 +66,28 @@
                     "isPartOfComposite": false
                 },
                 {
+                    "name": "",
+                    "id": "cdb10e0f-fb87-42bc-a76c-37da35ae0833",
+                    "path": "<Mouse>/middleButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CamRotButton",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f24412a5-938f-43cf-a618-1f1f4f06e217",
+                    "path": "<Keyboard>/alt",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CamRotButton",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
                     "name": "Keyboad",
                     "id": "22694f26-eed1-4391-90dd-c19625f11efd",
                     "path": "1DAxis",

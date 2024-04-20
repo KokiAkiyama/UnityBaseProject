@@ -6,7 +6,7 @@ using System.Collections.Generic;
 [RequireComponent(typeof(Camera))]
 public class SceneViewCamera : MonoBehaviour
 {
-    [SerializeField, Range(0.1f, 10f)]
+    [SerializeField, Range(100f, 6000f)]
     private float wheelSpeed = 1f;
 
     [SerializeField, Range(5f, 15f)]
@@ -48,7 +48,7 @@ public class SceneViewCamera : MonoBehaviour
 
     private void MouseWheel(float delta)
     {
-        transform.position += delta * wheelSpeed * transform.forward;
+        transform.position += delta * wheelSpeed*Time.deltaTime * transform.forward;
     }
 
     private void MouseDrag(Vector3 mousePos)
@@ -58,7 +58,7 @@ public class SceneViewCamera : MonoBehaviour
         if (diff.magnitude < Vector3.kEpsilon) return;
         
         
-        else if (Input.GetMouseButton(1) && GameManager.Instance.InputManager.Game["CamRotButton"].IsPressed())
+        else if (GameManager.Instance.InputManager.Game["CamRot"].IsPressed() && GameManager.Instance.InputManager.Game["CamRotButton"].IsPressed())
         {
             CameraRotate(new Vector2(-diff.y, diff.x) * rotateSpeed);
         }

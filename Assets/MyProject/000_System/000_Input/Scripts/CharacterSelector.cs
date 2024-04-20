@@ -100,7 +100,7 @@ public class CharacterSelector : MonoBehaviour
     void MoveCharacter()
     {
         if(selectedList.Count<=0)return;
-        if(GameManager.Instance.InputManager.Game["CamRotButton"].WasPerformedThisFrame()){return;}
+        if(GameManager.Instance.InputManager.Game["CamRotButton"].IsPressed()){return;}
         if (Input.GetMouseButtonDown(1))
         {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
