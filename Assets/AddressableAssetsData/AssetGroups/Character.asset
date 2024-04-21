@@ -10,13 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Default Local Group
+  m_Name: Character
   m_EditorClassIdentifier: 
-  m_GroupName: Default Local Group
+  m_GroupName: Character
   m_Data:
     m_SerializedData: []
   m_GUID: ed3645ba4857fe74186335c8c61f3737
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 9a3853d6369624ae6bba4800ef8eff64
+    m_Address: Zombie
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 10479dabae1a6414fb558367b4f01727, type: 2}
   m_SchemaSet:

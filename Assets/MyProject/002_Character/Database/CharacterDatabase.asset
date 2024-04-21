@@ -14,12 +14,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterData:
   - id: 0
+    prefab:
+      m_AssetGUID: 
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 0
     name: 
     hp: 0
     mp: 0
     actionRange: 0
     actionPoint: 0
   - id: 1
+    prefab:
+      m_AssetGUID: 9a3853d6369624ae6bba4800ef8eff64
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 0
     name: Zombie
     hp: 100
     mp: 10
