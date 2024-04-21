@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -85,6 +86,15 @@ public class CharacterAnimatorEvents : MonoBehaviour
 
         }
 
+    }
+    [Serializable]
+    public class CharacterEvent_Attack : CharaEventBase
+    {
+        public override void OnEvent(Animator animator)
+        {
+            var owner = GetOwner(animator);
+
+        }
     }
 
 }
