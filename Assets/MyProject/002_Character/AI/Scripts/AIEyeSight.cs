@@ -34,26 +34,25 @@ public class AIEyeSight : MonoBehaviour
                 await UniTask.Delay(200);
                 continue;
             }
-            //ŒŸõˆ—
+            //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             Founds.Clear();
             Collider[] colliders=Physics.OverlapSphere(transform.position, _radius, layer);
             
             foreach(var collider in colliders)
             {
-                //Rigidbody‚ª‚ ‚éH
+                //Rigidbodyï¿½ï¿½ï¿½ï¿½ï¿½ï¿½H
                 if (collider.attachedRigidbody == null) continue;
-                //MainObjectData‚ğ‚Á‚Ä‚éH
+                //MainObjectDataï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½H
                 var mainObject=collider.attachedRigidbody.GetComponentInParent<MainObjectData>();
                 if (mainObject == null) continue;
 
-                //©•ª©g‚Í–³‹
+                //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½gï¿½Í–ï¿½ï¿½ï¿½
                 if(MyMainObject == mainObject) continue;
 
-                //’Ç‰Á
+                //ï¿½Ç‰ï¿½
                 Founds.Add(mainObject);
             }
 
-            Debug.Log(Founds.Count);
             await UniTask.Delay(200);
         }
     }

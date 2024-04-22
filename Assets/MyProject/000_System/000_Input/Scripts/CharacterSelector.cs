@@ -109,9 +109,10 @@ public class CharacterSelector : MonoBehaviour
                  ray: ray,
                  hitInfo: out RaycastHit hit,
                  maxDistance: Mathf.Infinity,
-                 layerMask: stageLayer
+                 layerMask: stageLayer,
+                 queryTriggerInteraction:QueryTriggerInteraction.Collide
              );
-
+            
             if (isHit)
             {
                 foreach(var character in selectedList)
