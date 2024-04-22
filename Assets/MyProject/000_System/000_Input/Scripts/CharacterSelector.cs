@@ -87,7 +87,8 @@ public class CharacterSelector : MonoBehaviour
             if (isHit)
             {
                 var character= hit.collider.GetComponent<CharacterBrain>();
-                if(character && selectedList.Contains(character)==false)
+                if(character && character.MainObjectData.GroupID==MainObjectData.GroupIDs.Player 
+                && selectedList.Contains(character)==false)
                 {
                     selectedList.Add(character);
                 }
