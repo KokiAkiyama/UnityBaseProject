@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using UniRx;
+using UniRx.Triggers;
 
 public class CharacterSelector : MonoBehaviour
 {
@@ -115,20 +116,23 @@ public class CharacterSelector : MonoBehaviour
             
             if(isHit==false){return;}
 
-
-            if (hit.collider.gameObject.layer==stageLayer)
+            
+            if (Utility.MathEx.MathEx.ContainsLayerInMask(hit.collider.gameObject.layer, stageLayer))
             {
-                foreach(var character in selectedList)
+                foreach(var selected in selectedList)
                 {
-                    character.AIInputProvider.SetDestination(hit.point);
+                    selected.AIInputProvider.SetDestination(hit.point);
                 }
             }
-            else if(hit.collider.gameObject.layer==selectLayer)
+            else if(Utility.MathEx.MathEx.ContainsLayerInMask(hit.collider.gameObject.layer, selectLayer))
             {
                 var character=hit.collider.GetComponent<CharacterBrain>();
                 if(character.MainObjectData.GroupID==MainObjectData.GroupIDs.Enemy)
                 {
-                    
+                    foreach (var selected in selectedList)
+                    {
+                        selected.AIInputProvider.Target.Value= character;
+                    }
                 }
             }
         }

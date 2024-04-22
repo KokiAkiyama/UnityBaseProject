@@ -9,7 +9,9 @@ using UniRx;
 public class AIEyeSight : MonoBehaviour
 {
     [SerializeField] float _radius = 3f;
-    public List<MainObjectData> Founds { get; } = new();
+    public List<MainObjectData> Founds= new();
+    [SerializeField] LayerMask searchLayer;
+    
     public MainObjectData Get()
     {
         if (Founds.Count == 0) return null;
@@ -25,7 +27,6 @@ public class AIEyeSight : MonoBehaviour
     async void SearchUpdateAsync()
     {
         var cancelToken=this.GetCancellationTokenOnDestroy();
-        int layer = LayerMask.GetMask("SearchTarget");
         var MyMainObject=GetComponentInParent<MainObjectData>();
         while(cancelToken.IsCancellationRequested==false)
         {
@@ -36,7 +37,7 @@ public class AIEyeSight : MonoBehaviour
             }
             //��������
             Founds.Clear();
-            Collider[] colliders=Physics.OverlapSphere(transform.position, _radius, layer);
+            Collider[] colliders=Physics.OverlapSphere(transform.position, _radius, searchLayer);
             
             foreach(var collider in colliders)
             {

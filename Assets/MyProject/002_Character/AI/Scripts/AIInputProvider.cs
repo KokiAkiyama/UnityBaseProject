@@ -9,7 +9,8 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
     public enum StateType
     {
         Wait,
-        Move
+        Move,
+        MeleeAttack
     }
 
     Vector3 moveVec;
@@ -110,7 +111,7 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
 
             AIInputProvider.moveVec = dir;
 
-        
+            //AIEyeSightÇégópÇµÇΩçUåÇópéãäEì‡îªíË
             if(AIInputProvider.Target.Value!=null)
             {
                 foreach(var objectData in AIInputProvider.eyeSight.Founds)
@@ -121,6 +122,7 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
                     if(AIInputProvider.Target.Value==character)
                     {
                         AIInputProvider.IsAttack=true;
+                        AIInputProvider.ChangeState(StateType.MeleeAttack);
                         return;
                     }
 
