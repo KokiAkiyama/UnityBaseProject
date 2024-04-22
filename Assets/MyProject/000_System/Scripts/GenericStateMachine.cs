@@ -9,13 +9,15 @@ public class GenericStateMachine : MonoBehaviour
         [InspectorName("自動Update")]Auto,
         [InspectorName("手動Update")]Manual
     }
-    [SerializeField] UpdateTypes _updateType;
-    StateBase _nowState = null;
+
+
+    [SerializeField] UpdateTypes updateType;
+    StateBase nowState = null;
     public void ChangeState(StateBase state)
     {
-        _nowState?.OnExit();
-        _nowState = state;
-        _nowState?.OnEnter();
+        nowState?.OnExit();
+        nowState = state;
+        nowState?.OnEnter();
     }
     public Animator _animator { get; private set; }
     private void Awake()
@@ -37,30 +39,118 @@ public class GenericStateMachine : MonoBehaviour
         virtual public void OnExit() { }
         virtual public void OnUpdate() { }
         virtual public void OnFixedUpdate() { }
+
+        virtual public void OnCollisionEnter(Collision collision){} 
+        virtual public void OnCollisionStay(Collision collision){} 
+        virtual public void OnCollisionExit(Collision collision){} 
+
+        virtual public void OnTriggerEnter(Collider other){} 
+        virtual public void OnTriggerStay(Collider other){} 
+        virtual public void OnTriggerExit(Collider other){} 
     }
 
     public void DoUpdate()
     {
-        _nowState?.OnUpdate();
+        nowState?.OnUpdate();
     }
     public void DoFixedUpdate()
     {
-        _nowState?.OnFixedUpdate();
+        nowState?.OnFixedUpdate();
     }
+
+    public void DoOnCollisionEnter(Collision collision)
+    {
+        nowState?.OnCollisionEnter(collision);
+    }
+    
+    public void DoOnCollisionStay(Collision collision)
+    {
+        nowState?.OnCollisionStay(collision);
+    }
+    
+    public void DoOnCollisionExit(Collision collision)
+    {
+        nowState?.OnCollisionExit(collision);
+    }
+    
+    public void DoOnTriggerEnter(Collider other)
+    {
+        nowState?.OnTriggerEnter(other);
+    }
+    
+    public void DoOnTriggerStay(Collider other)
+    {
+        nowState?.OnTriggerStay(other);
+    }
+    
+    public void DoOnTriggerExit(Collider other)
+    {
+        nowState?.OnTriggerExit(other);
+    }
+
 
     void Update()
     {
-        if (_updateType == UpdateTypes.Auto)
+        if (updateType == UpdateTypes.Auto)
         {
-            _nowState?.OnUpdate();
+            nowState?.OnUpdate();
         }
     }
     void FixedUpdate()
     {
-        if (_updateType == UpdateTypes.Auto) 
+        if (updateType == UpdateTypes.Auto) 
         {
-            _nowState?.OnFixedUpdate();
+            nowState?.OnFixedUpdate();
         }
         
     }
+    
+    void OnCollisionEnter(Collision collision)
+    {
+        if(updateType == UpdateTypes.Auto)
+        {
+            nowState?.OnCollisionEnter(collision);
+        }
+    }
+    
+    void OnCollisionStay(Collision collision)
+    {
+        if(updateType == UpdateTypes.Auto)
+        {
+            nowState?.OnCollisionStay(collision);
+        }
+    }
+    
+    void OnCollisionExit(Collision collision)
+    {
+        if(updateType == UpdateTypes.Auto)
+        {
+            nowState?.OnCollisionExit(collision);
+        }
+    }
+    
+    void OnTriggerEnter(Collider other)
+    {
+        if(updateType == UpdateTypes.Auto)
+        {
+            nowState?.OnTriggerEnter(other);
+        }
+    }
+    
+    void OnTriggerStay(Collider other)
+    {
+        if(updateType == UpdateTypes.Auto)
+        {
+            nowState?.OnTriggerStay(other);
+        }
+    }
+    
+    void OnTriggerExit(Collider other)
+    {
+        if(updateType == UpdateTypes.Auto)
+        {
+            nowState?.OnTriggerExit(other);
+        }
+    }
+
 }

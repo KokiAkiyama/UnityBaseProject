@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
+using Damage;
+using System.Data.Common;
 
 public class CharacterBrain : MonoBehaviour
 {
@@ -11,6 +13,11 @@ public class CharacterBrain : MonoBehaviour
         Idle,
         Walk,
         MeleeAttack,
+    }
+
+    public struct AttackParam
+    {
+        DamageType type;
     }
 
     [SerializeField] GameObject aiInput;
@@ -31,6 +38,17 @@ public class CharacterBrain : MonoBehaviour
 
     [SerializeField] CharacterIDs ID;
 
+    [SerializeField] CharacterData param;
+
+    CharacterBrain target;
+    public CharacterBrain Target
+    {
+        get{return target;}
+        set{target=value;}
+    }
+
+    DamageParam attackParam=new();
+
     public void AddRootMotionDelta(ref Vector3 v)
     {
         rootMotionDaltaPosition += v;
@@ -43,6 +61,10 @@ public class CharacterBrain : MonoBehaviour
 
     void Start()
     {
+        //データベースからパラメータを取得
+        GameManager.Instance.CharacterController.Copy(ref param,ID);
+
+
         inputProvider = aiInput.GetComponent<IInputProvider>();
         AIInputProvider = inputProvider as AIInputProvider;
         this.UpdateAsObservable()
@@ -69,13 +91,44 @@ public class CharacterBrain : MonoBehaviour
         );
 
     }
+
+    void OnTriggerEnter(Collider other)
+    {
+        stateMachine.DoOnTriggerEnter(other);
+    }
+
+
+    public void Attack()
+    {
+        if(target==null){return;}
+        
+        DamageParam damageParam=new();
+        damageParam.DamageValue = param.strength;
+        damageParam.damageType = attackParam.damageType;
+
+        target.GetDamage(damageParam);
+    }
+
+
+
+    public void GetDamage(DamageParam damageParam)
+    {
+        param.HP=Mathf.Max(param.HP-(damageParam.DamageValue),0);
+        //死亡
+        if(param.HP<=0)
+        {
+
+
+        }
+    }
+
     public class ASBase : GenericStateMachine.StateBase
     {
-        public CharacterBrain Brain { get; private set; }
+        public CharacterBrain Owner { get; private set; }
 
         public override void Initialize(GenericStateMachine stateMachine)
         {
-            Brain = stateMachine.GetComponent<CharacterBrain>();
+            Owner = stateMachine.GetComponent<CharacterBrain>();
         }
     }
 
@@ -84,12 +137,12 @@ public class CharacterBrain : MonoBehaviour
     {
         public override void OnUpdate()
         {
-            Vector3 vMove = Brain.inputProvider.MoveVector;
+            Vector3 vMove = Owner.inputProvider.MoveVector;
 
             //歩き
             if (vMove.magnitude > stopMagnitude)
             {
-                Brain.animator.SetInteger("StateType", (int)StateType.Walk);
+                Owner.animator.SetInteger("StateType", (int)StateType.Walk);
             }
         }
     }
@@ -98,26 +151,41 @@ public class CharacterBrain : MonoBehaviour
     {
         public override void OnUpdate()
         {
-            Vector3 vMove = Brain.inputProvider.MoveVector;
+            Vector3 vMove = Owner.inputProvider.MoveVector;
             //停止
             if (vMove.magnitude <= stopMagnitude)
             {
-                Brain.animator.SetInteger("StateType", (int)StateType.Idle);
+                Owner.animator.SetInteger("StateType", (int)StateType.Idle);
                 return;
             }
-            Brain.moveValue = vMove * Brain.moveSpeed;
+            Owner.moveValue = vMove * Owner.moveSpeed;
 
             Quaternion qRota = Quaternion.RotateTowards(
-                Brain.transform.rotation,
+                Owner.transform.rotation,
                 Quaternion.LookRotation(vMove),
-                Brain.rotSpeed * Time.deltaTime
+                Owner.rotSpeed * Time.deltaTime
                 );
-            Brain.transform.rotation = qRota;
+            Owner.transform.rotation = qRota;
+        }
+
+        public override void OnTriggerEnter(Collider other)
+        {
+            base.OnTriggerEnter(other);
+
+            if(Owner.target==null){return;}
+
+            var brain=other.GetComponent<CharacterBrain>();
+            if(brain==Owner.Target)
+            {
+                Owner.animator.SetInteger("StateType", (int)StateType.MeleeAttack);
+                return;
+            }
+            
         }
     }
     [System.Serializable]
     public class ASMeleeAttack : ASBase
     {
-
+        
     }
 }

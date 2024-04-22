@@ -96,7 +96,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c94f8b0dd43054e4a9cfa0ef021ff2bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _updateType: 0
+  updateType: 0
 --- !u!1 &5396901118042364594
 GameObject:
   m_ObjectHideFlags: 0
@@ -304,7 +304,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c94f8b0dd43054e4a9cfa0ef021ff2bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _updateType: 1
+  updateType: 1
 --- !u!136 &3479246375605751373
 CapsuleCollider:
   m_ObjectHideFlags: 0

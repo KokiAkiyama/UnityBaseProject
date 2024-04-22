@@ -94,6 +94,8 @@ public class CharacterAnimatorEvents : MonoBehaviour
         {
             var owner = GetOwner(animator);
 
+            owner.Brain.Attack();
+
         }
     }
 

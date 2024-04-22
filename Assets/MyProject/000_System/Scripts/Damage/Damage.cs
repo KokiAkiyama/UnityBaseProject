@@ -4,15 +4,21 @@ using UnityEngine;
 
 namespace Damage
 {
+    public enum DamageType
+    {
+        Physical,
+        Magic
+    }
     /// <summary>
-    /// ƒ_ƒ[ƒW‚Ì’Ê’mƒf[ƒ^
+    /// ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½Ì’Ê’mï¿½fï¿½[ï¿½^
     /// </summary>
     public class DamageParam
     {
-        public int DamageValue;//ƒ_ƒ[ƒW’l
-        public float HitStopDuration;//ƒqƒbƒgƒXƒgƒbƒvŠÔ
-        public Vector3 Blow;    //‚Ô‚Á‚Æ‚Î‚µƒxƒNƒgƒ‹
-        public Vector3 HitPosition;//ƒqƒbƒgÀ•W
+        public int DamageValue;//ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½l
+        public DamageType damageType;
+        public float HitStopDuration;//ï¿½qï¿½bï¿½gï¿½Xï¿½gï¿½bï¿½vï¿½ï¿½ï¿½ï¿½
+        public Vector3 Blow;    //ï¿½Ô‚ï¿½ï¿½Æ‚Î‚ï¿½ï¿½xï¿½Nï¿½gï¿½ï¿½
+        public Vector3 HitPosition;//ï¿½qï¿½bï¿½gï¿½ï¿½ï¿½W
         public void Reset()
         {
             DamageValue = default;
@@ -20,74 +26,74 @@ namespace Damage
             Blow = default;
             HitPosition= default;
         }
-        //ƒIƒuƒWƒFƒNƒgƒv[ƒ‹
+        //ï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½vï¿½[ï¿½ï¿½
         public static UnityEngine.Pool.ObjectPool<DamageParam> s_pool=new(
-            createFunc: ()=>new DamageParam(),//ƒNƒ‰ƒXì¬‰–ˆ—
-            actionOnGet: target => { target.Reset(); },//Pool‚©‚çæ“¾‚Ìˆ—
-            actionOnDestroy: target => {  },   //Pool‚Ö–ß‚·‚Ìˆ—
-            collectionCheck: true,           //d•¡ƒ`ƒFƒbƒN
-            defaultCapacity: 100,            //‰Šú‚ÌŒÂ”
-            maxSize: 1000                       //Å‘åŒÂ”
+            createFunc: ()=>new DamageParam(),//ï¿½Nï¿½ï¿½ï¿½Xï¿½ì¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+            actionOnGet: target => { target.Reset(); },//Poolï¿½ï¿½ï¿½ï¿½æ“¾ï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½
+            actionOnDestroy: target => {  },   //Poolï¿½Ö–ß‚ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½
+            collectionCheck: true,           //ï¿½dï¿½ï¿½ï¿½`ï¿½Fï¿½bï¿½N
+            defaultCapacity: 100,            //ï¿½ï¿½ï¿½ï¿½ï¿½ÌŒÂï¿½
+            maxSize: 1000                       //ï¿½Å‘ï¿½Âï¿½
             );
     }
 
     public class DamageReply
     {
-        //public bool IsHit;//ƒqƒbƒg‚µ‚½‚©
-        [System.Flags]//•¡”ƒ`ƒFƒbƒN‰Â
+        //public bool IsHit;//ï¿½qï¿½bï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        [System.Flags]//ï¿½ï¿½ï¿½ï¿½ï¿½`ï¿½Fï¿½bï¿½Nï¿½ï¿½
         public enum ResultTypes
         {
             Hit  =1 << 0,
             Guard=1 << 1,
         }
         public ResultTypes ResultType;
-        public int ActualDamageValue;//ÀÛ‚É—^‚¦‚½ƒ_ƒ[ƒW’l
+        public int ActualDamageValue;//ï¿½ï¿½ï¿½Û‚É—^ï¿½ï¿½ï¿½ï¿½ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½l
         public void Reset()
         {
             ResultType = 0;
             ActualDamageValue = 0;
         }
-        //ƒIƒuƒWƒFƒNƒgƒv[ƒ‹
+        //ï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½vï¿½[ï¿½ï¿½
         public static UnityEngine.Pool.ObjectPool<DamageReply> s_pool = new(
-            createFunc: () => new DamageReply(),//ƒNƒ‰ƒXì¬‰–ˆ—
-            actionOnGet: target => { target.Reset(); },//Pool‚©‚çæ“¾‚Ìˆ—
-            actionOnDestroy: target => { },   //Pool‚Ö–ß‚·‚Ìˆ—
-            collectionCheck: true,           //d•¡ƒ`ƒFƒbƒN
-            defaultCapacity: 100,            //‰Šú‚ÌŒÂ”
-            maxSize: 1000                       //Å‘åŒÂ”
+            createFunc: () => new DamageReply(),//ï¿½Nï¿½ï¿½ï¿½Xï¿½ì¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+            actionOnGet: target => { target.Reset(); },//Poolï¿½ï¿½ï¿½ï¿½æ“¾ï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½
+            actionOnDestroy: target => { },   //Poolï¿½Ö–ß‚ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½
+            collectionCheck: true,           //ï¿½dï¿½ï¿½ï¿½`ï¿½Fï¿½bï¿½N
+            defaultCapacity: 100,            //ï¿½ï¿½ï¿½ï¿½ï¿½ÌŒÂï¿½
+            maxSize: 1000                       //ï¿½Å‘ï¿½Âï¿½
             );
     }
     /// <summary>
-    /// ƒ_ƒ[ƒWŠÖŒW‚Ì‘‹Œû
+    /// ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½ÖŒWï¿½Ì‘ï¿½ï¿½ï¿½
     /// </summary>
     public interface IDamageApplicable
     {
         /// <summary>
-        /// ƒ_ƒ[ƒW‚Ì“K—p
+        /// ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½Ì“Kï¿½p
         /// </summary>
-        /// <param name="param">—^‚¦‚éƒ_ƒ[ƒW‚ÌÚ×</param>
-        /// <param name="rep">Œ‹‰ÊóM—p</param>
-        void ApplyDamege(DamageParam param,DamageReply rep);
+        /// <param name="param">ï¿½^ï¿½ï¿½ï¿½ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½ÌÚï¿½</param>
+        /// <param name="rep">ï¿½ï¿½ï¿½Êï¿½Mï¿½p</param>
+        void ApplyDamege(DamageParam damageParam,DamageReply rep);
         /// <summary>
-        /// e‚Ö‚Ìƒqƒbƒg’Ê’m
+        /// ï¿½eï¿½Ö‚Ìƒqï¿½bï¿½gï¿½Ê’m
         /// </summary>
         /// <param name="param"></param>
         /// <param name="rep"></param>
-        void ApplyHit(DamageParam param,DamageReply rep);
+        void ApplyHit(DamageParam damageParam,DamageReply rep);
     }
     /// <summary>
-    /// ƒqƒbƒgÏ‚İƒŠƒXƒg
+    /// ï¿½qï¿½bï¿½gï¿½Ï‚İƒï¿½ï¿½Xï¿½g
     /// </summary>
     public class HitList
     {
-        //ƒqƒbƒg‚µ‚½“z‚Ìî•ñ
+        //ï¿½qï¿½bï¿½gï¿½ï¿½ï¿½ï¿½ï¿½zï¿½Ìï¿½ï¿½
         public class Node
         {
             public MainObjectData Targrt { get; set; }
-            //c‚èŠÔ
+            //ï¿½cï¿½èï¿½ï¿½
             public float RemainingTime;
         }
-        //–³‹ƒŠƒXƒg
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½g
         Dictionary<MainObjectData, Node> _objectDic = new();
         List<MainObjectData> deleteList = new(10);
         public void Clear()
@@ -104,13 +110,13 @@ namespace Damage
             return false;
         }
         /// <summary>
-        /// ƒqƒbƒgÏ‚İ‚Æ‚µ‚Ä“o˜^
+        /// ï¿½qï¿½bï¿½gï¿½Ï‚İ‚Æ‚ï¿½ï¿½Ä“oï¿½^
         /// </summary>
-        /// <param name="target">“o˜^‚·‚é“z</param>
-        /// <param name="duration">‰ğœ‚³‚ê‚é‚Ü‚Å‚ÌŠÔ</param>
+        /// <param name="target">ï¿½oï¿½^ï¿½ï¿½ï¿½ï¿½z</param>
+        /// <param name="duration">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚Å‚Ìï¿½ï¿½ï¿½</param>
         public void Register(MainObjectData target,float duration)
         {
-            //Šù‚É‘¶İ‚·‚éH
+            //ï¿½ï¿½ï¿½É‘ï¿½ï¿½İ‚ï¿½ï¿½ï¿½H
            if(_objectDic.TryGetValue(target,out var exist))
            {
                 exist.RemainingTime = duration;
@@ -129,19 +135,19 @@ namespace Damage
         public void AdvanceTime()
         {
             
-            //ŠÔ‚ği‚ß‚é
+            //ï¿½ï¿½ï¿½Ô‚ï¿½iï¿½ß‚ï¿½
             foreach(var node in _objectDic.Values)
             {
-                //ŠÔ‚ği‚ß‚é
+                //ï¿½ï¿½ï¿½Ô‚ï¿½iï¿½ß‚ï¿½
                 node.RemainingTime -= Time.deltaTime;
             
                 if(node.RemainingTime <= 0f)
                 {
-                    //íœ—\–ñ
+                    //ï¿½íœï¿½\ï¿½ï¿½
                     deleteList.Add(node.Targrt);
                 }
             }
-            //íœˆ—
+            //ï¿½íœï¿½ï¿½ï¿½ï¿½
             //UnityEngine.Pool.LinkedPool<MainObjectData>()
             foreach(var target in deleteList)
             {

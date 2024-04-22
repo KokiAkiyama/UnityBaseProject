@@ -25,6 +25,10 @@ MonoBehaviour:
     mp: 0
     actionRange: 0
     actionPoint: 0
+    strength: 10
+    Dexterity: 10
+    Constitution: 10
+    Intelligence: 10
   - id: 1
     prefab:
       m_AssetGUID: 9a3853d6369624ae6bba4800ef8eff64
@@ -37,3 +41,7 @@ MonoBehaviour:
     mp: 10
     actionRange: 9.5
     actionPoint: 1
+    strength: 10
+    Dexterity: 10
+    Constitution: 14
+    Intelligence: 10

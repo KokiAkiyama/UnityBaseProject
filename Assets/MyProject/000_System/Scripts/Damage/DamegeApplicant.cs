@@ -7,38 +7,38 @@ namespace Damage
 {
     public class DamegeApplicant : MonoBehaviour
     {
-        [Header("ƒqƒbƒg‚µ‚½‚ÌƒGƒtƒFƒNƒg")]
-        [Tooltip("ƒqƒbƒg‚µ‚½‚ÉAƒGƒtƒFƒNƒg‚ª”­¶‚µ‚Ü‚·(*LƒÖM)")]
+        [Header("ï¿½qï¿½bï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÌƒGï¿½tï¿½Fï¿½Nï¿½g")]
+        [Tooltip("ï¿½qï¿½bï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÉAï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½(*ï¿½Lï¿½ÖM)")]
         [SerializeField] GameObject _assetOnHitEffect;
         MainObjectData _mainObject;
         HitList _hitList=new();
         [SerializeField] float _hitInterval=1.0f;
-        //ƒqƒbƒgƒXƒgƒbƒvŠÔ
+        //ï¿½qï¿½bï¿½gï¿½Xï¿½gï¿½bï¿½vï¿½ï¿½ï¿½ï¿½
         [SerializeField] float _hitStopDuration = 0.0f;
         public MainObjectData MainObject => this.GetComponentLazy(ref _mainObject);
         // Start is called before the first frame update
         void Start()
         {
-            //Collider‚ªÚG‚µ‚Ä‚¢‚éŠÔ
+            //Colliderï¿½ï¿½ï¿½ÚGï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½
             this.OnCollisionStayAsObservable()
                 .Subscribe(collision =>
                 {
-                    //ƒ_ƒ[ƒW’Ê’m‹@”\‚ğŠ‚µ‚Ä‚¢‚é‚©
+                    //ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½Ê’mï¿½@ï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚©
                     var dmgApp = collision.rigidbody.GetComponent<IDamageApplicable>();
                     if (dmgApp == null) { return; }
-                    //“¯‚¶ƒOƒ‹[ƒv‚Í–³‹
+                    //ï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½[ï¿½vï¿½Í–ï¿½ï¿½ï¿½
                     var targetMainObj = collision.rigidbody.GetComponent<MainObjectData>();
                     if (targetMainObj == null) { return; }
                     if(MainObject.GroupID== targetMainObj.GroupID) { return; }
-                    //Šù‚ÉƒqƒbƒgÏ‚İ‚©‚Ç‚¤‚©
+                    //ï¿½ï¿½ï¿½Éƒqï¿½bï¿½gï¿½Ï‚İ‚ï¿½ï¿½Ç‚ï¿½ï¿½ï¿½
                     if(_hitList.Exist(targetMainObj)) { return; }
-                    //“o˜^
+                    //ï¿½oï¿½^
                     _hitList.Register(targetMainObj, _hitInterval);
 
 
-                    //‘Šè‚Éƒ_ƒ[ƒW“K—p
+                    //ï¿½ï¿½ï¿½ï¿½Éƒ_ï¿½ï¿½ï¿½[ï¿½Wï¿½Kï¿½p
                     //DamageParam param = DamageParam.s_pool.Get();
-                    //©“®ƒŠƒŠ[ƒX
+                    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½X
                     using (DamageParam.s_pool.Get(out var param))
                     {
 
@@ -50,17 +50,17 @@ namespace Damage
                             param.HitPosition = collision.contacts[0].point;
                             dmgApp.ApplyDamege(param, rep);
 
-                            //Œ‹‰Ê‚ğ‚à‚Æ‚Éˆ—
+                            //ï¿½ï¿½ï¿½Ê‚ï¿½ï¿½ï¿½ï¿½Æ‚Éï¿½ï¿½ï¿½
                             if (rep.ResultType.HasFlag(DamageReply.ResultTypes.Hit))
                             {
-                                 //e‚Ö‚Ìƒqƒbƒg’Ê’m
+                                 //ï¿½eï¿½Ö‚Ìƒqï¿½bï¿½gï¿½Ê’m
                                 if (MainObject.OwnerObject!=null &&
                                    MainObject.OwnerObject.DamageApp.IsUnityNull()==false)
                                 {
                                     MainObject.OwnerObject.DamageApp.ApplyHit(param, rep);
                                 }
 
-                                //ƒGƒtƒFƒNƒg‚ğo‚·
+                                //ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½oï¿½ï¿½
 
                                 if (_assetOnHitEffect != null)
                                 {
