@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class CharacterAnimatorEvents : MonoBehaviour
 {
@@ -23,7 +24,7 @@ public class CharacterAnimatorEvents : MonoBehaviour
     public class CharaEventBase : AnimatorEvents.EventNodeBase
     {
         CharacterAnimatorEvents _owner;
-        public CharacterAnimatorEvents GetOwner(Animator animator)
+        public virtual CharacterAnimatorEvents GetOwner(Animator animator)
         {
             if (_owner == null) _owner = animator.GetComponent<CharacterAnimatorEvents>();
             return _owner;
@@ -87,6 +88,31 @@ public class CharacterAnimatorEvents : MonoBehaviour
         }
 
     }
+
+    [Serializable]
+    public class CharacterEvent : CharaEventBase
+    {
+        [SerializeField] UnityEvent ownerEvent=new();
+
+        public override CharacterAnimatorEvents GetOwner(Animator animator)
+        {
+            //ownerEvent.
+
+
+            return base.GetOwner(animator);
+            
+        }
+
+        public override void OnEvent(Animator animator)
+        {
+            var owner = GetOwner(animator);
+
+            ownerEvent.Invoke();
+
+        }
+    }
+    
+
     [Serializable]
     public class CharacterEvent_Attack : CharaEventBase
     {
@@ -95,6 +121,19 @@ public class CharacterAnimatorEvents : MonoBehaviour
             var owner = GetOwner(animator);
 
             owner.Brain.Attack();
+
+        }
+    }
+    
+
+    [Serializable]
+    public class CharacterEvent_EndAttack : CharaEventBase
+    {
+        public override void OnEvent(Animator animator)
+        {
+            var owner = GetOwner(animator);
+
+            owner.Brain.EndAttack();
 
         }
     }

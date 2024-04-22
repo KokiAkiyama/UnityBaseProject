@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5690782098575105404}
   - component: {fileID: 7195748229794078337}
   - component: {fileID: 7583590098282635301}
+  - component: {fileID: 756040916880920997}
   m_Layer: 0
   m_Name: AIInput
   m_TagString: Untagged
@@ -34,6 +35,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1688628174161261536}
+  - {fileID: 6749802603282956830}
   m_Father: {fileID: 7017909954329941245}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8781940003332756517
@@ -50,6 +52,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   eyeSight: {fileID: 5690782098575105404}
   pathFinding: {fileID: 4436956423103061562}
+  Target:
+    value: {fileID: 0}
 --- !u!114 &5690782098575105404
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -97,6 +101,33 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   updateType: 0
+--- !u!54 &756040916880920997
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1555444325331169939}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &5396901118042364594
 GameObject:
   m_ObjectHideFlags: 0
@@ -271,6 +302,23 @@ MonoBehaviour:
   rotSpeed: 600
   mainObjectData: {fileID: 1352192898865312136}
   ID: 0
+  param:
+    id: 0
+    prefab:
+      m_AssetGUID: 
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 0
+    sprite: {fileID: 0}
+    name: 
+    hp: 100
+    mp: 10
+    actionRange: 9
+    actionPoint: 1
+    strength: 10
+    dexterity: 10
+    constitution: 10
+    intelligence: 10
 --- !u!95 &8757457664781113493
 Animator:
   serializedVersion: 5
@@ -342,3 +390,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _groupID: 2
   _name: 
+--- !u!1 &7631713466839365001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6749802603282956830}
+  m_Layer: 0
+  m_Name: Senser
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6749802603282956830
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7631713466839365001}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2494338173221387485}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

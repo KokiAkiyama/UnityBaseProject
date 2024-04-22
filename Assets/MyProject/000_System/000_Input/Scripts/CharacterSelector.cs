@@ -109,15 +109,26 @@ public class CharacterSelector : MonoBehaviour
                  ray: ray,
                  hitInfo: out RaycastHit hit,
                  maxDistance: Mathf.Infinity,
-                 layerMask: stageLayer,
+                 layerMask: stageLayer | selectLayer,
                  queryTriggerInteraction:QueryTriggerInteraction.Collide
              );
             
-            if (isHit)
+            if(isHit==false){return;}
+
+
+            if (hit.collider.gameObject.layer==stageLayer)
             {
                 foreach(var character in selectedList)
                 {
                     character.AIInputProvider.SetDestination(hit.point);
+                }
+            }
+            else if(hit.collider.gameObject.layer==selectLayer)
+            {
+                var character=hit.collider.GetComponent<CharacterBrain>();
+                if(character.MainObjectData.GroupID==MainObjectData.GroupIDs.Enemy)
+                {
+                    
                 }
             }
         }

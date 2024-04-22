@@ -5,6 +5,7 @@ using UniRx;
 using UniRx.Triggers;
 using Damage;
 using System.Data.Common;
+using TMPro;
 
 public class CharacterBrain : MonoBehaviour
 {
@@ -39,13 +40,6 @@ public class CharacterBrain : MonoBehaviour
     [SerializeField] CharacterIDs ID;
 
     [SerializeField] CharacterData param;
-
-    CharacterBrain target;
-    public CharacterBrain Target
-    {
-        get{return target;}
-        set{target=value;}
-    }
 
     DamageParam attackParam=new();
 
@@ -90,6 +84,7 @@ public class CharacterBrain : MonoBehaviour
         }
         );
 
+
     }
 
     void OnTriggerEnter(Collider other)
@@ -97,16 +92,20 @@ public class CharacterBrain : MonoBehaviour
         stateMachine.DoOnTriggerEnter(other);
     }
 
+    public void ChangeState(StateType type)
+    {
+        animator.SetInteger("StateType",(int)type);
+    }
 
     public void Attack()
     {
-        if(target==null){return;}
+        if(AIInputProvider.Target.Value==null){return;}
         
         DamageParam damageParam=new();
         damageParam.DamageValue = param.strength;
         damageParam.damageType = attackParam.damageType;
 
-        target.GetDamage(damageParam);
+        AIInputProvider.Target.Value.GetDamage(damageParam);
     }
 
 
@@ -120,6 +119,12 @@ public class CharacterBrain : MonoBehaviour
 
 
         }
+    }
+
+    public void EndAttack()
+    {
+        AIInputProvider.IsAttack=false;
+        ChangeState(StateType.Idle);
     }
 
     public class ASBase : GenericStateMachine.StateBase
@@ -142,7 +147,7 @@ public class CharacterBrain : MonoBehaviour
             //歩き
             if (vMove.magnitude > stopMagnitude)
             {
-                Owner.animator.SetInteger("StateType", (int)StateType.Walk);
+                Owner.ChangeState(StateType.Walk);
             }
         }
     }
@@ -152,10 +157,20 @@ public class CharacterBrain : MonoBehaviour
         public override void OnUpdate()
         {
             Vector3 vMove = Owner.inputProvider.MoveVector;
+
+            if(Owner.AIInputProvider.IsAttack)
+            {
+                Owner.ChangeState(StateType.MeleeAttack);
+                return;
+
+            }
+
+
+
             //停止
             if (vMove.magnitude <= stopMagnitude)
             {
-                Owner.animator.SetInteger("StateType", (int)StateType.Idle);
+                Owner.ChangeState(StateType.Idle);
                 return;
             }
             Owner.moveValue = vMove * Owner.moveSpeed;
@@ -172,12 +187,12 @@ public class CharacterBrain : MonoBehaviour
         {
             base.OnTriggerEnter(other);
 
-            if(Owner.target==null){return;}
+            if(Owner.AIInputProvider.Target.Value==null){return;}
 
             var brain=other.GetComponent<CharacterBrain>();
-            if(brain==Owner.Target)
+            if(brain==Owner.AIInputProvider.Target.Value)
             {
-                Owner.animator.SetInteger("StateType", (int)StateType.MeleeAttack);
+                Owner.ChangeState(StateType.MeleeAttack);
                 return;
             }
             

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Triggers;
-using Unity.VisualScripting;
+using UniRx;
 public class AIInputProvider : MonoBehaviour, IInputProvider
 {
     public enum StateType
@@ -14,17 +14,25 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
 
     Vector3 moveVec;
     public Vector3 MoveVector => moveVec;
-
     [SerializeField] AIEyeSight eyeSight;
     [SerializeField] AIPathFinding pathFinding;
     Animator animator;
 
     MainObjectData _targetChara;
+
+    public ReactiveProperty<CharacterBrain> Target=new(null);
+
+    bool isAttack=false;
+
     public bool IsAttack
     {
         get
         {
-            return false;
+            return isAttack;
+        }
+        set
+        {
+            isAttack=value;
         }
     }
 
@@ -38,6 +46,22 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
        TryGetComponent(out animator);
     }
 
+
+    void Start()
+    {
+        Target.
+        Where(newTarget=>newTarget!=null)
+        .Subscribe(newTarget=>
+        {
+            SetDestination(newTarget.transform.position);
+        });
+    }
+
+
+    public void ChangeState(StateType type)
+    {
+        animator.SetInteger("StateType",(int)type);
+    }
 
     [System.Serializable]
     public abstract class AISBase:GenericStateMachine.StateBase
@@ -61,7 +85,7 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
             AIInputProvider.moveVec=Vector3.zero;
             if(AIInputProvider.pathFinding.IsAlived==false)
             {
-                AIInputProvider.animator.SetInteger("StateType" ,(int)StateType.Move);
+                AIInputProvider.ChangeState(StateType.Move);
                 return;
             }
         }
@@ -72,9 +96,9 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
     { 
         public override void OnUpdate()
         {
-            if(AIInputProvider.pathFinding.IsAlived)
+            if(AIInputProvider.pathFinding.IsAlived && AIInputProvider.Target.Value==null)
             {
-                AIInputProvider.animator.SetInteger("StateType" ,(int)StateType.Wait);
+                AIInputProvider.ChangeState(StateType.Wait);
                 AIInputProvider.moveVec=Vector3.zero;
                 return;
             }
@@ -86,8 +110,35 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
 
             AIInputProvider.moveVec = dir;
 
+        
+            if(AIInputProvider.Target.Value!=null)
+            {
+                foreach(var objectData in AIInputProvider.eyeSight.Founds)
+                {
+                    var character=objectData.GetComponent<CharacterBrain>();
+                    if(character==null){continue;}
 
-            
+                    if(AIInputProvider.Target.Value==character)
+                    {
+                        AIInputProvider.IsAttack=true;
+                        return;
+                    }
+
+                }
+            }
+        }
+    }
+
+    [System.Serializable]
+    public class AISMeleeAttack : AISBase
+    {
+        public override void OnUpdate()
+        {
+            if(AIInputProvider.isAttack==false)
+            {
+                AIInputProvider.ChangeState(StateType.Wait);
+                return;
+            }
         }
     }
 

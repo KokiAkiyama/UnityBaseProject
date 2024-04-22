@@ -263,17 +263,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   onNormalizedTimeReached:
-  - normalizedTime: 0
+  - normalizedTime: 0.283
     repeat: 0
     atLeastOnce: 0
     neverWhileExit: 0
     _argParam:
-      rid: 4553738947020455939
+      rid: 1001
+  - normalizedTime: 0.65
+    repeat: 0
+    atLeastOnce: 0
+    neverWhileExit: 0
+    _argParam:
+      rid: 1002
   references:
     version: 2
     RefIds:
-    - rid: 4553738947020455939
+    - rid: 1001
       type: {class: CharacterAnimatorEvents/CharacterEvent_Attack, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 1002
+      type: {class: CharacterAnimatorEvents/CharacterEvent_EndAttack, ns: , asm: Assembly-CSharp}
       data: 
 --- !u!1101 &7900614177491422775
 AnimatorStateTransition:
