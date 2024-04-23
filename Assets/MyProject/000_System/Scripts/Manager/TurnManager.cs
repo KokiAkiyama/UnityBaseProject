@@ -82,7 +82,11 @@ public class TurnManager : MonoBehaviour
 
         }
         
-        actionCharacters.Select(character => character.IsTurnEnd=false);
+        //ターンエンドフラグをリセット
+        foreach (var character in actionCharacters)
+        {
+            character.IsTurnEnd = false;
+        }
     }
 
     // Start is called before the first frame update
