@@ -113,7 +113,8 @@ public class CharacterBrain : MonoBehaviour
 
     public void GetDamage(DamageParam damageParam)
     {
-        param.HP=Mathf.Max(param.HP-(damageParam.DamageValue),0);
+        //耐久力補正値を考慮したダメージ計算
+        param.HP=Mathf.Max(param.HP-(damageParam.DamageValue-param.CorrectionValue_Constitution),0);
         //死亡
         if(param.HP<=0)
         {

@@ -49,6 +49,12 @@ public class CharacterData
     [SerializeField,Tooltip("知力（魔法攻撃力）")]
     public int intelligence =StatusBaseValue;
 
+    //補正値
+    public int CorrectionValue_Strength=>strength-StatusBaseValue;
+    public int CorrectionValue_Dexterity=>dexterity-StatusBaseValue;
+    public int CorrectionValue_Constitution=>constitution-StatusBaseValue;
+    public int CorrectionValue_Intelligence=>intelligence-StatusBaseValue;
+
     //ステータス基礎値
     public static readonly int StatusBaseValue=10;
     
