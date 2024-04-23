@@ -876,7 +876,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputManager: {fileID: 643855371}
-  characterController: {fileID: 1753095927}
+  characterManager: {fileID: 1753095927}
   turnManager: {fileID: 1934046034}
 --- !u!1001 &1680110694
 PrefabInstance:
@@ -1056,6 +1056,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a4348ea0e5694fafaff952dabb1b878, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  actionCharacters: []
 --- !u!1001 &785929460078833557
 PrefabInstance:
   m_ObjectHideFlags: 0

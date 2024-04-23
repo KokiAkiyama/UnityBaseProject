@@ -4,8 +4,6 @@ using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 using Damage;
-using System.Data.Common;
-using TMPro;
 
 public class CharacterBrain : MonoBehaviour
 {
@@ -38,6 +36,8 @@ public class CharacterBrain : MonoBehaviour
     [SerializeField] MainObjectData mainObjectData;
     public MainObjectData MainObjectData => mainObjectData;
 
+    public bool IsTurnEnd=false;
+
     [SerializeField] CharacterIDs ID;
 
     [SerializeField] CharacterData param;
@@ -57,7 +57,7 @@ public class CharacterBrain : MonoBehaviour
     void Start()
     {
         //データベースからパラメータを取得
-        GameManager.Instance.CharacterController.Copy(ref param,ID);
+        GameManager.Instance.CharacterManager.Copy(ref param,ID);
 
 
         inputProvider = aiInput.GetComponent<IInputProvider>();
@@ -85,7 +85,7 @@ public class CharacterBrain : MonoBehaviour
         }
         );
         //キャラクターマネージャーに登録
-        GameManager.Instance.CharacterController.AddCharacter(this);
+        GameManager.Instance.CharacterManager.AddCharacter(this);
     }
 
     void OnTriggerEnter(Collider other)

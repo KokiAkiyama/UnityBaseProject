@@ -7,8 +7,8 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
     [SerializeField] PlayerInputManager inputManager;
     public PlayerInputManager InputManager=>inputManager;
-    [SerializeField]CharacterManager characterController;
-    public CharacterManager CharacterController => characterController;
+    [SerializeField]CharacterManager characterManager;
+    public CharacterManager CharacterManager => characterManager;
 
     [SerializeField] TurnManager turnManager;
     public TurnManager TurnManager => turnManager;
@@ -16,5 +16,29 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         Instance=this;
+    }
+
+    void Start()
+    {
+        
+    }
+    void Update()
+    {
+        var players=characterManager.Characters.FindAll(character=>character.MainObjectData.GroupID==MainObjectData.GroupIDs.Player);
+        var enemies=characterManager.Characters.FindAll(character=>character.MainObjectData.GroupID==MainObjectData.GroupIDs.Enemy);
+        //勝利
+        if(enemies.Count<=0)
+        {
+            Debug.Log("Win！");
+            return;
+        }
+        //敗北
+        if(players.Count<=0)
+        {
+            Debug.Log("lose！");
+            return;
+        }
+
+
     }
 }
