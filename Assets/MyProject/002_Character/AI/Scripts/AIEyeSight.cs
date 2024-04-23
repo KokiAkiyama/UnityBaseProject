@@ -49,7 +49,7 @@ public class AIEyeSight : MonoBehaviour
 
                 //�������g�͖���
                 if(MyMainObject == mainObject) continue;
-
+                if(Founds.Contains(mainObject))continue;
                 //�ǉ�
                 Founds.Add(mainObject);
             }

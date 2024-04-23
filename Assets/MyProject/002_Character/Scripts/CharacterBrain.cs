@@ -14,6 +14,7 @@ public class CharacterBrain : MonoBehaviour
         Idle,
         Walk,
         MeleeAttack,
+        Dead
     }
 
     public struct AttackParam
@@ -116,7 +117,8 @@ public class CharacterBrain : MonoBehaviour
         //死亡
         if(param.HP<=0)
         {
-
+            AIInputProvider.IsDead=true;
+            ChangeState(StateType.Dead);
 
         }
     }
@@ -124,6 +126,7 @@ public class CharacterBrain : MonoBehaviour
     public void EndAttack()
     {
         AIInputProvider.IsAttack=false;
+        AIInputProvider.Target.Value=null;
         ChangeState(StateType.Idle);
     }
 
@@ -162,7 +165,7 @@ public class CharacterBrain : MonoBehaviour
             {
                 Owner.ChangeState(StateType.MeleeAttack);
                 return;
-
+                
             }
 
 
@@ -183,24 +186,29 @@ public class CharacterBrain : MonoBehaviour
             Owner.transform.rotation = qRota;
         }
 
-        public override void OnTriggerEnter(Collider other)
-        {
-            base.OnTriggerEnter(other);
+        // public override void OnTriggerEnter(Collider other)
+        // {
+        //     base.OnTriggerEnter(other);
 
-            if(Owner.AIInputProvider.Target.Value==null){return;}
+        //     if(Owner.AIInputProvider.Target.Value==null){return;}
 
-            var brain=other.GetComponent<CharacterBrain>();
-            if(brain==Owner.AIInputProvider.Target.Value)
-            {
-                Owner.ChangeState(StateType.MeleeAttack);
-                return;
-            }
+        //     var brain=other.GetComponent<CharacterBrain>();
+        //     if(brain==Owner.AIInputProvider.Target.Value)
+        //     {
+        //         Owner.ChangeState(StateType.MeleeAttack);
+        //         return;
+        //     }
             
-        }
+        // }
     }
     [System.Serializable]
     public class ASMeleeAttack : ASBase
     {
-        
     }
+
+    [System.Serializable]
+    public class ASDead : ASBase
+    {
+    }
+    
 }

@@ -4,13 +4,15 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Triggers;
 using UniRx;
+using System;
 public class AIInputProvider : MonoBehaviour, IInputProvider
 {
     public enum StateType
     {
         Wait,
         Move,
-        MeleeAttack
+        MeleeAttack,
+        Dead,
     }
 
     Vector3 moveVec;
@@ -23,19 +25,9 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
 
     public ReactiveProperty<CharacterBrain> Target=new(null);
 
-    bool isAttack=false;
+    public bool IsAttack{get;set;}=false;
 
-    public bool IsAttack
-    {
-        get
-        {
-            return isAttack;
-        }
-        set
-        {
-            isAttack=value;
-        }
-    }
+    public bool IsDead{get;set;}=false;
 
     public void SetDestination(Vector3 pos)
     {
@@ -111,7 +103,7 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
 
             AIInputProvider.moveVec = dir;
 
-            //AIEyeSight‚ğg—p‚µ‚½UŒ‚—p‹ŠE“à”»’è
+            //AIEyeSightï¿½ï¿½ï¿½gï¿½pï¿½ï¿½ï¿½ï¿½ï¿½Uï¿½ï¿½ï¿½pï¿½ï¿½ï¿½Eï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             if(AIInputProvider.Target.Value!=null)
             {
                 foreach(var objectData in AIInputProvider.eyeSight.Founds)
@@ -134,9 +126,16 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
     [System.Serializable]
     public class AISMeleeAttack : AISBase
     {
+        public override void OnEnter()
+        {
+            base.OnEnter();
+
+            AIInputProvider.pathFinding.Stop();
+        }
         public override void OnUpdate()
         {
-            if(AIInputProvider.isAttack==false)
+            base.OnUpdate();
+            if(AIInputProvider.IsAttack==false)
             {
                 AIInputProvider.ChangeState(StateType.Wait);
                 return;
@@ -144,5 +143,9 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
         }
     }
 
-    
+    [Serializable]
+    public class AISDead : AISBase
+    {
+        
+    }
 }

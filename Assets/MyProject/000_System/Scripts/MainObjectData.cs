@@ -22,13 +22,13 @@ public class MainObjectData : MonoBehaviour
             return _groupID; 
         }
     }
-    //–¼‘O
+    //ï¿½ï¿½ï¿½O
     [SerializeField]string _name;
     public string Name => _name;
-    //ƒI[ƒi[
+    //ï¿½Iï¿½[ï¿½iï¿½[
     public MainObjectData OwnerObject { get; set; }
 
-    //ƒ_ƒ[ƒWŠÖŒWƒCƒ“ƒ^[ƒtƒF[ƒX
+    //ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½ÖŒWï¿½Cï¿½ï¿½ï¿½^ï¿½[ï¿½tï¿½Fï¿½[ï¿½X
     public Damage.IDamageApplicable DamageApp { get; set; }
 
     void Awake()
@@ -36,4 +36,6 @@ public class MainObjectData : MonoBehaviour
         DamageApp = GetComponent<Damage.IDamageApplicable>();
 
     }
+
+    
 }

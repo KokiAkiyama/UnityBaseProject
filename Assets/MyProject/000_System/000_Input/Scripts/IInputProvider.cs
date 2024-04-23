@@ -6,4 +6,5 @@ public interface IInputProvider
 {
     Vector3 MoveVector { get; }
     bool IsAttack { get; }
+    bool IsDead { get; }
 }

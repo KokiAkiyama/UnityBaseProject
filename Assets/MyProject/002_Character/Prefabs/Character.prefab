@@ -67,6 +67,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _radius: 3
+  Founds: []
+  searchLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!95 &7195748229794078337
 Animator:
   serializedVersion: 5
@@ -140,7 +144,7 @@ GameObject:
   - component: {fileID: 5313271910478498921}
   - component: {fileID: 4436956423103061562}
   m_Layer: 0
-  m_Name: pathFinding
+  m_Name: PathFinding
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
