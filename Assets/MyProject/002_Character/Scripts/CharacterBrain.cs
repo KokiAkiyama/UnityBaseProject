@@ -41,7 +41,7 @@ public class CharacterBrain : MonoBehaviour
     [SerializeField] CharacterIDs ID;
 
     [SerializeField] CharacterData param;
-
+    public CharacterData Param=>param;
     DamageParam attackParam=new();
 
     public void AddRootMotionDelta(ref Vector3 v)
@@ -84,8 +84,8 @@ public class CharacterBrain : MonoBehaviour
             stateMachine.DoFixedUpdate();
         }
         );
-
-
+        //キャラクターマネージャーに登録
+        GameManager.Instance.CharacterController.AddCharacter(this);
     }
 
     void OnTriggerEnter(Collider other)
@@ -118,7 +118,7 @@ public class CharacterBrain : MonoBehaviour
         //死亡
         if(param.HP<=0)
         {
-            AIInputProvider.IsDead=true;
+            
             ChangeState(StateType.Dead);
 
         }
@@ -129,6 +129,18 @@ public class CharacterBrain : MonoBehaviour
         AIInputProvider.IsAttack=false;
         AIInputProvider.Target.Value=null;
         ChangeState(StateType.Idle);
+    }
+
+    void Rotate()
+    {
+        var vMove=inputProvider.MoveVector;
+        
+        Quaternion qRota = Quaternion.RotateTowards(
+                transform.rotation,
+                Quaternion.LookRotation(vMove),
+                rotSpeed * Time.deltaTime
+                );
+            transform.rotation = qRota;
     }
 
     public class ASBase : GenericStateMachine.StateBase
@@ -179,12 +191,7 @@ public class CharacterBrain : MonoBehaviour
             }
             Owner.moveValue = vMove * Owner.moveSpeed;
 
-            Quaternion qRota = Quaternion.RotateTowards(
-                Owner.transform.rotation,
-                Quaternion.LookRotation(vMove),
-                Owner.rotSpeed * Time.deltaTime
-                );
-            Owner.transform.rotation = qRota;
+            Owner.Rotate();
         }
 
         // public override void OnTriggerEnter(Collider other)
@@ -210,6 +217,13 @@ public class CharacterBrain : MonoBehaviour
     [System.Serializable]
     public class ASDead : ASBase
     {
+        public override void OnEnter()
+        {
+            base.OnEnter();
+
+            Owner.AIInputProvider.IsDead=true;
+        }
+
     }
     
 }

@@ -9,6 +9,9 @@ public class GameManager : MonoBehaviour
     public PlayerInputManager InputManager=>inputManager;
     [SerializeField]CharacterManager characterController;
     public CharacterManager CharacterController => characterController;
+
+    [SerializeField] TurnManager turnManager;
+    public TurnManager TurnManager => turnManager;
     // Start is called before the first frame update
     void Awake()
     {
