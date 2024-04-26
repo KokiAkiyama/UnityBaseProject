@@ -60,6 +60,31 @@ public class AIPathFinding : MonoBehaviour
         navAgent.isStopped = false;
         navAgent.SetDestination(position);
     }
+    /// <summary>
+    /// 既存の経路から制限距離を考慮したものに再計算する
+    /// </summary>
+    /// <param name="corners"></param>
+    /// <param name="nowPos"></param>
+    /// <param name="limitRange"></param>
+    /// <returns></returns>
+    public List<Vector3> CalcCornersFromRange(Vector3[] corners,Vector3 nowPos,float limitRange)
+    {
+        List<Vector3> result=new();
+        Vector3 prevPos=nowPos;
+        float range=0f;
+        foreach(Vector3 pos in corners)
+        {
+            range+=(pos-prevPos).magnitude;
+            if(range>=limitRange)
+            {
+                break;
+            }
+            result.Add(pos);
+        }
+
+        return result;
+    }  
+
 
     private void OnDrawGizmos()
     {
