@@ -74,6 +74,7 @@ public class CharacterDatabase : ScriptableObject
         copiedData.Prefab=database.Prefab;
         copiedData.Sprite=database.Sprite;
         copiedData.Name=database.Name;
+        copiedData.HP=database.HP;
         copiedData.MP=database.MP;
         copiedData.ActionRange=database.ActionRange;
         copiedData.ActionPoint=database.ActionPoint;
