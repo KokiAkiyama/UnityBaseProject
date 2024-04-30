@@ -58,6 +58,22 @@ public class CharacterData
     //ステータス基礎値
     public static readonly int StatusBaseValue=10;
     
+
+    public void Copy(ref CharacterData copiedData)
+    {
+        copiedData.ID           =ID;
+        copiedData.Prefab       =Prefab;
+        copiedData.Sprite       =Sprite;
+        copiedData.Name         =Name;
+        copiedData.HP           =HP;
+        copiedData.MP           =MP;
+        copiedData.ActionRange  =ActionRange;
+        copiedData.ActionPoint  =ActionPoint;
+        copiedData.strength     =strength;
+        copiedData.dexterity    =dexterity;
+        copiedData.constitution =constitution;
+        copiedData.intelligence =intelligence;
+    }
 }
 [CreateAssetMenu(fileName = "CharacterDatabase",menuName ="My Object/CharacterDatabase")]
 public class CharacterDatabase : ScriptableObject
@@ -70,18 +86,7 @@ public class CharacterDatabase : ScriptableObject
     public void Copy(ref CharacterData copiedData,CharacterIDs id)
     {
         var database=GetChatacrerData(id);
-        copiedData.ID=database.ID;
-        copiedData.Prefab=database.Prefab;
-        copiedData.Sprite=database.Sprite;
-        copiedData.Name=database.Name;
-        copiedData.HP=database.HP;
-        copiedData.MP=database.MP;
-        copiedData.ActionRange=database.ActionRange;
-        copiedData.ActionPoint=database.ActionPoint;
-        copiedData.strength=database.strength;
-        copiedData.dexterity=database.dexterity;
-        copiedData.constitution=database.constitution;
-        copiedData.intelligence=database.intelligence;
+        database.Copy(ref copiedData);
 
     }
     void OnValidate()

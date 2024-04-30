@@ -39,10 +39,14 @@ public class CharacterBrain : MonoBehaviour
     public bool IsTurnEnd=false;
 
     [SerializeField] CharacterIDs ID;
+    
+    [SerializeField]CharacterData turnMaxParam;
 
     [SerializeField] CharacterData param;
-    public CharacterData Param=>param;
+    public CharacterData Param{get=>param;set=>param=value;}
     DamageParam attackParam=new();
+
+
 
     public void AddRootMotionDelta(ref Vector3 v)
     {
@@ -58,7 +62,7 @@ public class CharacterBrain : MonoBehaviour
     {
         //データベースからパラメータを取得
         GameManager.Instance.CharacterManager.Copy(ref param,ID);
-
+        param.Copy(ref turnMaxParam);
 
         inputProvider = aiInput.GetComponent<IInputProvider>();
         AIInputProvider = inputProvider as AIInputProvider;
@@ -96,6 +100,11 @@ public class CharacterBrain : MonoBehaviour
     public void ChangeState(StateType type)
     {
         animator.SetInteger("StateType",(int)type);
+    }
+
+    public void StartTurn()
+    {
+        turnMaxParam.Copy(ref param);
     }
 
     public void Attack()
