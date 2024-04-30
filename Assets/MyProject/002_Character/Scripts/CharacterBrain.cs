@@ -76,7 +76,7 @@ public class CharacterBrain : MonoBehaviour
             rootMotionDaltaPosition = Vector3.zero;
 
 
-            transform.position = new Vector3(transform.position.x, 0f, transform.position.z);
+            transform.position = new Vector3(transform.position.x, inputProvider.AgentHeight, transform.position.z);
 
             moveValue = Vector3.zero;
         }

@@ -5,6 +5,7 @@ using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Triggers;
 using UniRx;
 using System;
+using Utility.UnityEngineEx;
 public class AIInputProvider : MonoBehaviour, IInputProvider
 {
     public enum StateType
@@ -28,6 +29,8 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
     public bool IsAttack{get;set;}=false;
 
     public bool IsDead{get;set;}=false;
+
+    public float AgentHeight => pathFinding.transform.position.y;
 
     public void SetDestination(Vector3 pos)
     {
@@ -105,6 +108,9 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
             if (dir.sqrMagnitude >= 1.0f) dir.Normalize();
 
             AIInputProvider.moveVec = dir;
+
+
+            
 
             //AIEyeSightを使ったターゲット搜索
             if(AIInputProvider.Target.Value!=null)
