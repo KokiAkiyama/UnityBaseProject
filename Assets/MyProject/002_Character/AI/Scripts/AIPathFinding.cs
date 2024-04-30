@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
+using Cysharp.Threading.Tasks;
+using Unity.VisualScripting;
+using System.IO;
 [RequireComponent(typeof(NavMeshAgent))]
 
 public class AIPathFinding : MonoBehaviour
@@ -62,21 +65,80 @@ public class AIPathFinding : MonoBehaviour
         navAgent.isStopped = false;
         navAgent.SetDestination(position);
     }
+
+    //経路計算
+    public bool CalcCorners(ref List<Vector3> corners,ref Vector3 destPos)
+    {
+        NavMeshPath path = new NavMeshPath();
+        bool canArrive=NavMesh.CalculatePath(transform.position,destPos,NavMesh.AllAreas,path);
+        corners=path.corners.ToList();
+        if(canArrive==false)
+        {
+            if(corners.Count<=0)
+            {
+                destPos=transform.position;
+            }
+            else
+            {
+                destPos=corners.First();
+            }
+            
+        }
+        return canArrive;
+    }
+
+    public bool CanMoveInRange(Vector3 destPos,float limitRange)
+    {
+        List<Vector3> calcCorners=new();
+        CalcCorners(ref calcCorners,ref destPos);
+        Vector3 prevPos=transform.position;
+        float distance=0f;
+        foreach(Vector3 pos in calcCorners)
+        {
+            distance+=(pos-prevPos).magnitude;
+            prevPos=pos;
+        }
+        
+        return distance <= limitRange;
+    }
+
     /// <summary>
     /// 既存の経路から制限距離を考慮したものに再計算する
     /// </summary>
     /// <param name="corners">NavMeshPathで算出された経由地</param>
-    /// <param name="nowPos">現在のエージェントの座標</param>
     /// <param name="resultPos">移動できる限界座標</param>
+    /// <param name="nowPos">現在のエージェントの座標</param>
     /// <param name="limitRange">移動可能距離</param>
-    /// <returns>再計算された経由地</returns>
-    public static List<Vector3> CalcCornersFromRange(Vector3[] corners,Vector3 nowPos,ref Vector3 resultPos,float limitRange)
+    public static void CalcCornersFromRange(ref List<Vector3> corners,ref Vector3 resultPos,Vector3 nowPos,float limitRange)
     {
-        List<Vector3> result=new();
+        //経路がない場合は制限距離を計算して終了
+        if(corners.Count == 0)
+        {
+            float distance=(resultPos-nowPos).magnitude;
+            if(distance <= 0)
+            {
+                return;
+            }
+
+            if(distance > limitRange)
+            {
+                Vector3 moveDir=(resultPos-nowPos).normalized;
+                resultPos=nowPos+(moveDir*limitRange);
+            }
+            return;
+        }
+
+        Vector3[] copy=new Vector3 [corners.Count];
+        corners.CopyTo(copy);
+        
+        //移動順に変換
+        copy.Reverse();
+        
+        corners.Clear();
         Vector3 prevPos=nowPos;
         float range=0f;
-        corners.Reverse();
-        foreach(Vector3 pos in corners)
+
+        foreach(Vector3 pos in copy)
         {
             float distance=(pos-prevPos).magnitude;
             if((range+distance)>=limitRange)
@@ -88,40 +150,29 @@ public class AIPathFinding : MonoBehaviour
                 break;
             }
             range+=distance;
-            result.Add(pos);
+            corners.Add(pos);
             prevPos=pos;
         }
-        result.Reverse();
-        return result;
+        corners.Reverse();
     }  
 
 
     public void DrawGuizmosCalcCorners(Vector3 destPos,float limitRange)
     {
         //経路を計算
-        NavMeshPath path = new NavMeshPath();
-        NavMesh.CalculatePath(transform.position,destPos,NavMesh.AllAreas,path);
         List<Vector3> calcCorners=new();
-        path.GetCornersNonAlloc(calcCorners.ToArray());
+        CalcCorners(ref calcCorners,ref destPos);
         //制限距離に応じて再計算
-        calcCorners=CalcCornersFromRange(path.corners,transform.position,ref destPos,limitRange);
+        CalcCornersFromRange(ref calcCorners,ref destPos,transform.position,limitRange);
         //結果を描画
-        Vector3 prevPos = new();
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(destPos, 0.2f);
-        int i = 0;
+        Vector3 prevPos = destPos;
+        
         foreach(var pos in calcCorners)
         {
-            if(i==0)
-            {
-                prevPos = pos;
-            }
-            else
-            {
-                Gizmos.DrawLine(prevPos, pos);
-                prevPos = pos;
-            }
-            ++i;
+            Gizmos.DrawLine(prevPos, pos);
+            prevPos = pos;
         }
 
     }

@@ -31,6 +31,7 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
 
     public void SetDestination(Vector3 pos)
     {
+        
         pathFinding.SetDestination(pos);
     }
 
