@@ -38,12 +38,13 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
     float movePathDistance=0f;
     float movedPathDistance=0f;
     public float MovedPathDistance=>movedPathDistance;
+    public float RemainingPathDistance=> movePathDistance-movedPathDistance;
     public void SetDestination(Vector3 pos)
     {
 
         List<Vector3> corners=new();
-        movePathDistance=ownerBrain.Param.ActionRange;
-        pathFinding.CalcCornersFromRange(ref pos,ref corners,ref movePathDistance);
+        movePathDistance=pathFinding.CalcCornersFromRange(ref pos,ref corners, ownerBrain.Param.ActionRange);
+        movedPathDistance = 0f;
         pathFinding.SetDestination(pos);
     }
 
@@ -114,10 +115,11 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
             }
 
             //残り移動可能距離計算
-            AIInputProvider.movedPathDistance=
-                AIInputProvider.movePathDistance-AIInputProvider.pathFinding.CalcPathDistance();
+            float moveDistanceNow=
+                (AIInputProvider.RemainingPathDistance) -AIInputProvider.pathFinding.CalcPathDistance();
+            AIInputProvider.movedPathDistance += moveDistanceNow;
 
-            AIInputProvider.ownerBrain.Param.ActionRange-=AIInputProvider.movedPathDistance;
+            AIInputProvider.ownerBrain.Param.ActionRange-= moveDistanceNow;
 
             base.OnUpdate();
 
