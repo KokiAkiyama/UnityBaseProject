@@ -101,7 +101,9 @@ public class CharacterBrain : MonoBehaviour
     {
         animator.SetInteger("StateType",(int)type);
     }
-
+    /// <summary>
+    /// ターン開始時に呼ばれる
+    /// </summary>
     public void StartTurn()
     {
         turnMaxParam.Copy(ref param);

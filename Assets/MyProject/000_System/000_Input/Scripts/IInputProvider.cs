@@ -13,4 +13,6 @@ public interface IInputProvider
 
     bool IsAttack { get; }
     bool IsDead { get; }
+
+    bool IsMove{ get; }
 }

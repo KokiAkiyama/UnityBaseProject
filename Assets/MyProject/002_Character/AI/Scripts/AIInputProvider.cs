@@ -15,6 +15,7 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
         MeleeAttack,
         Dead,
     }
+    CharacterBrain ownerBrain;
 
     Vector3 moveVec;
     public Vector3 MoveVector => moveVec;
@@ -29,12 +30,20 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
     public bool IsAttack{get;set;}=false;
 
     public bool IsDead{get;set;}=false;
+    
+    public bool IsMove{get=>moveVec.magnitude>0f;}
 
     public float AgentHeight => pathFinding.transform.position.y;
 
+    float movePathDistance=0f;
+    float movedPathDistance=0f;
+    public float MovedPathDistance=>movedPathDistance;
     public void SetDestination(Vector3 pos)
     {
-        
+
+        List<Vector3> corners=new();
+        movePathDistance=ownerBrain.Param.ActionRange;
+        pathFinding.CalcCornersFromRange(ref pos,ref corners,ref movePathDistance);
         pathFinding.SetDestination(pos);
     }
 
@@ -52,6 +61,8 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
         {
             SetDestination(newTarget.transform.position);
         });
+
+        ownerBrain=GetComponentInParent<CharacterBrain>(); 
     }
 
 
@@ -101,6 +112,13 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
                 AIInputProvider.moveVec=Vector3.zero;
                 return;
             }
+
+            //残り移動可能距離計算
+            AIInputProvider.movedPathDistance=
+                AIInputProvider.movePathDistance-AIInputProvider.pathFinding.CalcPathDistance();
+
+            AIInputProvider.ownerBrain.Param.ActionRange-=AIInputProvider.movedPathDistance;
+
             base.OnUpdate();
 
             var dir = AIInputProvider.pathFinding.DesiredVelecity;
@@ -108,9 +126,7 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
             if (dir.sqrMagnitude >= 1.0f) dir.Normalize();
 
             AIInputProvider.moveVec = dir;
-
-
-            
+          
 
             //AIEyeSightを使ったターゲット搜索
             if(AIInputProvider.Target.Value!=null)

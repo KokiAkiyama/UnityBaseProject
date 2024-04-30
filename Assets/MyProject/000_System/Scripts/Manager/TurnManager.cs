@@ -80,6 +80,12 @@ public class TurnManager : MonoBehaviour
             
             actionCharacters=trunList[nextIdx];
 
+
+            //ターン開始時の処理
+            foreach(var character in actionCharacters)
+            {
+                character.StartTurn();
+            }
         }
         
         //ターンエンドフラグをリセット
