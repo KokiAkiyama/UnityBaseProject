@@ -143,6 +143,9 @@ public class CharacterBrain : MonoBehaviour
             transform.rotation = qRota;
     }
 
+    public void DrawGizmosCalceCorners(Vector3 destPos)=>AIInputProvider.DrawGuizmosCalcCorners(destPos,param.ActionRange);
+
+
     public class ASBase : GenericStateMachine.StateBase
     {
         public CharacterBrain Owner { get; private set; }

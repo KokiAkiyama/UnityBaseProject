@@ -187,4 +187,35 @@ public class CharacterSelector : MonoBehaviour
             renderers[i].material=prevMaterials[i];
         }
     }
+
+
+    private void OnDrawGizmos()
+    {
+        if(selectedList.Count<=0){return;}
+
+        Gizmos.color = Color.blue;
+
+        var ray=Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        bool isHit = Physics.Raycast(
+                 ray: ray,
+                 hitInfo: out RaycastHit hit,
+                 maxDistance: Mathf.Infinity,
+                 layerMask: stageLayer,
+                 queryTriggerInteraction:QueryTriggerInteraction.Collide
+             );
+
+        if(isHit==false){return;}
+
+        if(Utility.MathEx.MathEx.ContainsLayerInMask(hit.collider.gameObject.layer, stageLayer)==false)
+        {
+            return;
+        }
+
+        foreach(var selected in selectedList)
+        {
+            selected.DrawGizmosCalceCorners(hit.point);
+        }
+
+    }
 }

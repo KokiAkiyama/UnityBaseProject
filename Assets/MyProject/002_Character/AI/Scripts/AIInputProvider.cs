@@ -56,6 +56,8 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
         animator.SetInteger("StateType",(int)type);
     }
 
+    public void DrawGuizmosCalcCorners(Vector3 destPos,float limitRange)=>pathFinding.DrawGuizmosCalcCorners(destPos,limitRange);
+
     [System.Serializable]
     public abstract class AISBase:GenericStateMachine.StateBase
     {
@@ -103,7 +105,7 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
 
             AIInputProvider.moveVec = dir;
 
-            //AIEyeSight���g�p�����U���p���E������
+            //AIEyeSightを使ったターゲット搜索
             if(AIInputProvider.Target.Value!=null)
             {
                 foreach(var objectData in AIInputProvider.eyeSight.Founds)

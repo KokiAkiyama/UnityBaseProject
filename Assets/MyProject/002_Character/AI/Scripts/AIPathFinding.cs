@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
@@ -7,6 +8,7 @@ using UnityEngine.AI;
 public class AIPathFinding : MonoBehaviour
 {
     NavMeshAgent navAgent;
+
     //到着しているか
     public bool IsAlived
     {
@@ -63,28 +65,66 @@ public class AIPathFinding : MonoBehaviour
     /// <summary>
     /// 既存の経路から制限距離を考慮したものに再計算する
     /// </summary>
-    /// <param name="corners"></param>
-    /// <param name="nowPos"></param>
-    /// <param name="limitRange"></param>
-    /// <returns></returns>
-    public List<Vector3> CalcCornersFromRange(Vector3[] corners,Vector3 nowPos,float limitRange)
+    /// <param name="corners">NavMeshPathで算出された経由地</param>
+    /// <param name="nowPos">現在のエージェントの座標</param>
+    /// <param name="resultPos">移動できる限界座標</param>
+    /// <param name="limitRange">移動可能距離</param>
+    /// <returns>再計算された経由地</returns>
+    public static List<Vector3> CalcCornersFromRange(Vector3[] corners,Vector3 nowPos,ref Vector3 resultPos,float limitRange)
     {
         List<Vector3> result=new();
         Vector3 prevPos=nowPos;
         float range=0f;
+        corners.Reverse();
         foreach(Vector3 pos in corners)
         {
-            range+=(pos-prevPos).magnitude;
-            if(range>=limitRange)
+            float distance=(pos-prevPos).magnitude;
+            if((range+distance)>=limitRange)
             {
+                //目的地までの移動限界座標の算出
+                float resultDist=limitRange-range;
+                Vector3 moveDir=(pos-prevPos).normalized;
+                resultPos=prevPos+(moveDir*resultDist);
                 break;
             }
+            range+=distance;
             result.Add(pos);
+            prevPos=pos;
         }
-
+        result.Reverse();
         return result;
     }  
 
+
+    public void DrawGuizmosCalcCorners(Vector3 destPos,float limitRange)
+    {
+        //経路を計算
+        NavMeshPath path = new NavMeshPath();
+        NavMesh.CalculatePath(transform.position,destPos,NavMesh.AllAreas,path);
+        List<Vector3> calcCorners=new();
+        path.GetCornersNonAlloc(calcCorners.ToArray());
+        //制限距離に応じて再計算
+        calcCorners=CalcCornersFromRange(path.corners,transform.position,ref destPos,limitRange);
+        //結果を描画
+        Vector3 prevPos = new();
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(destPos, 0.2f);
+        int i = 0;
+        foreach(var pos in calcCorners)
+        {
+            if(i==0)
+            {
+                prevPos = pos;
+            }
+            else
+            {
+                Gizmos.DrawLine(prevPos, pos);
+                prevPos = pos;
+            }
+            ++i;
+        }
+
+    }
 
     private void OnDrawGizmos()
     {
