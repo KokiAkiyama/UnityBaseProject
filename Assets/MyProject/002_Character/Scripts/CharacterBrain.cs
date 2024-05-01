@@ -135,7 +135,10 @@ public class CharacterBrain : MonoBehaviour
         DamageParam damageParam=new();
         damageParam.DamageValue = param.strength;
         damageParam.damageType = attackParam.damageType;
-
+        
+        //アクションポイントを消費
+        --param.ActionPoint;
+        
         AIInputProvider.Target.Value.GetDamage(damageParam);
     }
 

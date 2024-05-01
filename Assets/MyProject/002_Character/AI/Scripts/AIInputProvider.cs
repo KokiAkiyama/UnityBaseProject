@@ -60,6 +60,8 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
 
     bool CheckAttack()
     {
+        if(ownerBrain.Param.ActionPoint<=0){return false;}
+
         //AIEyeSightを使ったターゲット搜索
         if(Target.Value!=null)
         {
@@ -88,6 +90,7 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
         Where(newTarget=>newTarget!=null)
         .Subscribe(newTarget=>
         {
+            if(ownerBrain.Param.ActionPoint<=0){return;}
             SetDestination(newTarget.transform.position);
         });
 
