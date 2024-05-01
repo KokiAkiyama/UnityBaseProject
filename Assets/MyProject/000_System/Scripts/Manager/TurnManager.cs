@@ -14,6 +14,11 @@ public class TurnManager : MonoBehaviour
 
     [SerializeField] int turnCount=0;
     /// <summary>
+    /// 強制ターンエンド
+    /// </summary>
+    [Tooltip("強制ターンエンド")]
+    public BoolReactiveProperty turnEndFlg=new(false); 
+    /// <summary>
     /// 陣営ごとの行動順を作成
     /// </summary>
     public void CreateTurnList()
@@ -98,6 +103,21 @@ public class TurnManager : MonoBehaviour
             actionCharacters.RemoveAll(character=>character==null);
 
         }).AddTo(this);
+
+        turnEndFlg
+        .Where(flg=>flg)
+        .Subscribe(flg=>{
+            
+            foreach(var character in actionCharacters)
+            {
+                if(character.IsTurnEnd.Value==false)
+                {
+                    character.IsTurnEnd.Value=true;
+                }
+            }
+
+            turnEndFlg.Value=false;
+        });
     }
 
     // Update is called once per frame
