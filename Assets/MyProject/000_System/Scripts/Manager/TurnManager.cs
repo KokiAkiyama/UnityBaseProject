@@ -8,55 +8,69 @@ using UniRx.Triggers;
 public class TurnManager : MonoBehaviour
 {
 
-    public List<List<CharacterBrain>> trunList=new();
-
+    List<List<CharacterBrain>> turnList=new();
+    /// <summary>
+    /// 行動中のキャラクター
+    /// </summary>
     [SerializeField] List<CharacterBrain> actionCharacters=new();
 
-    [SerializeField] int turnCount=0;
+    [SerializeField,Tooltip("ターン一周ごとに発生する行動数")] int actionCount=0;
     /// <summary>
     /// 強制ターンエンド
     /// </summary>
-    [Tooltip("強制ターンエンド")]
-    public BoolReactiveProperty turnEndFlg=new(false); 
+    [SerializeField,Tooltip("強制ターンエンド")]
+    BoolReactiveProperty turnEndFlg=new(false); 
+    /// <summary>
+    /// ターンの終了を通知するフラグ
+    /// </summary>
+    public ReactiveProperty<MainObjectData.GroupIDs> TurnChangeRP{get;private set;}=new();
 
-    public MainObjectData.GroupIDs TurnID;
+    /// <summary>
+    /// インスペクター表示用
+    /// </summary>
+    [SerializeField,Tooltip("行動中の陣営")] MainObjectData.GroupIDs TurnIDForInspector;
 
     /// <summary>
     /// 陣営ごとの行動順を作成
+    /// (敏捷力ソート済みのキャラクターリストを陣営ごとの要素で二次元配列(turnList)に纏める)
     /// </summary>
     public void CreateTurnList()
     {
         if(GameManager.Instance.CharacterManager.Characters.Count<=0){return;}
        
-        trunList.Clear();
+        turnList.Clear();
+        //キャラクターリストを取得（敏捷力ソート済み）
         var characters=GameManager.Instance.CharacterManager.Characters;
         List<CharacterBrain> turn=new();
+
         MainObjectData.GroupIDs sideID=characters.First().MainObjectData.GroupID;
+        
         turn.Add(characters.First());
         
         foreach(var character in characters)
         {
-            
             if(character==null){continue;}
+
             if(character.MainObjectData.GroupID!=sideID)
             {
-                trunList.Add(turn);
+                turnList.Add(turn);
                 turn=new();
                 sideID=character.MainObjectData.GroupID;
             }
+
             if(turn.Contains(character)==false)
             {
                 turn.Add(character);
 
                 if(characters.IndexOf(character)==(characters.Count-1))
                 {
-                    trunList.Add(turn);
+                    turnList.Add(turn);
                 }
             }
 
         }
 
-        turnCount=trunList.Count;
+        actionCount=turnList.Count;
     }
     /// <summary>
     /// ターンを進める
@@ -64,10 +78,11 @@ public class TurnManager : MonoBehaviour
     public void AdvanceTurn()
     {
         if(GameManager.Instance.CharacterManager.Characters.Count<=0){return;}
+
         if(actionCharacters==null)
         {
             CreateTurnList();
-            actionCharacters=trunList.First();
+            actionCharacters=turnList.First();
         }
         else
         {
@@ -78,7 +93,7 @@ public class TurnManager : MonoBehaviour
             }
 
 
-            int nextIdx=SystemEx.RangeLoopIndex(trunList.IndexOf(actionCharacters)+1,ref trunList);
+            int nextIdx=SystemEx.RangeLoopIndex(turnList.IndexOf(actionCharacters)+1,ref turnList);
             
             //リストの更新はターンが一周する際に行う
             if(nextIdx==0)
@@ -86,9 +101,9 @@ public class TurnManager : MonoBehaviour
                 CreateTurnList();
             }
             
-            actionCharacters=trunList[nextIdx];
-            //行動する陣営を取得
-            TurnID=actionCharacters.First().MainObjectData.GroupID;
+            actionCharacters=turnList[nextIdx];
+            //ターンの進行を通知
+            TurnChangeRP.Value=actionCharacters.First().MainObjectData.GroupID;
         }
         
         //ターンエンドフラグをリセット
@@ -98,9 +113,9 @@ public class TurnManager : MonoBehaviour
         }
     }
 
-    // Start is called before the first frame update
     void Start()
     {
+        //参照先が存在しない要素を削除
         this.UpdateAsObservable()
         .Subscribe(_=>
         {
@@ -108,7 +123,7 @@ public class TurnManager : MonoBehaviour
             actionCharacters.RemoveAll(character=>character==null);
 
         }).AddTo(this);
-
+        //ターンの終了を通知するフラグ
         turnEndFlg
         .Where(flg=>flg)
         .Subscribe(flg=>{
@@ -122,6 +137,14 @@ public class TurnManager : MonoBehaviour
             }
 
             turnEndFlg.Value=false;
+        });
+
+        TurnChangeRP
+        .SkipLatestValueOnSubscribe()
+        .Subscribe(flg=>{
+
+            TurnIDForInspector=flg;
+
         });
     }
 
