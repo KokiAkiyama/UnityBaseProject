@@ -18,6 +18,9 @@ public class TurnManager : MonoBehaviour
     /// </summary>
     [Tooltip("強制ターンエンド")]
     public BoolReactiveProperty turnEndFlg=new(false); 
+
+    public MainObjectData.GroupIDs TurnID;
+
     /// <summary>
     /// 陣営ごとの行動順を作成
     /// </summary>
@@ -84,6 +87,8 @@ public class TurnManager : MonoBehaviour
             }
             
             actionCharacters=trunList[nextIdx];
+            //行動する陣営を取得
+            TurnID=actionCharacters.First().MainObjectData.GroupID;
         }
         
         //ターンエンドフラグをリセット
