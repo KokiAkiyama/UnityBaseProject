@@ -66,7 +66,7 @@ public class TurnManager : MonoBehaviour
             //ターンエンドしていないキャラクターがいる限りターンを進めない
             foreach(var character in actionCharacters)
             {
-                if(character.IsTurnEnd==false){return;}
+                if(character.IsTurnEnd.Value==false){return;}
             }
 
 
@@ -79,19 +79,12 @@ public class TurnManager : MonoBehaviour
             }
             
             actionCharacters=trunList[nextIdx];
-
-
-            //ターン開始時の処理
-            foreach(var character in actionCharacters)
-            {
-                character.StartTurn();
-            }
         }
         
         //ターンエンドフラグをリセット
         foreach (var character in actionCharacters)
         {
-            character.IsTurnEnd = false;
+            character.IsTurnEnd.Value = false;
         }
     }
 

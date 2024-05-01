@@ -209,12 +209,12 @@ GameObject:
   m_Component:
   - component: {fileID: 7017909954329941245}
   - component: {fileID: 4812387810851893804}
-  - component: {fileID: 5107502433783529018}
   - component: {fileID: -8943488498782573228}
   - component: {fileID: 8757457664781113493}
   - component: {fileID: 2725655945968411667}
   - component: {fileID: 3479246375605751373}
   - component: {fileID: 1352192898865312136}
+  - component: {fileID: 3862003145546068673}
   m_Layer: 6
   m_Name: Character
   m_TagString: Untagged
@@ -265,29 +265,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 122
   m_CollisionDetection: 0
---- !u!136 &5107502433783529018
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6993202032414110790}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 1.84
-  m_Direction: 1
-  m_Center: {x: 0, y: 0.93, z: 0}
 --- !u!114 &-8943488498782573228
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -307,6 +284,23 @@ MonoBehaviour:
   mainObjectData: {fileID: 1352192898865312136}
   IsTurnEnd: 0
   ID: 0
+  turnMaxParam:
+    id: 0
+    prefab:
+      m_AssetGUID: 
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 0
+    sprite: {fileID: 0}
+    name: 
+    hp: 100
+    mp: 10
+    actionRange: 9
+    actionPoint: 1
+    strength: 10
+    dexterity: 10
+    constitution: 10
+    intelligence: 10
   param:
     id: 0
     prefab:
@@ -395,6 +389,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _groupID: 2
   _name: 
+--- !u!135 &3862003145546068673
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6993202032414110790}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 1.08
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &7631713466839365001
 GameObject:
   m_ObjectHideFlags: 0

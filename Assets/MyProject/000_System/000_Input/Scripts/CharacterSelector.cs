@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Linq;
 using UniRx;
 using UniRx.Triggers;
+using Utility.MathEx;
 
 public class CharacterSelector : MonoBehaviour
 {
@@ -117,14 +118,14 @@ public class CharacterSelector : MonoBehaviour
             if(isHit==false){return;}
 
             
-            if (Utility.MathEx.MathEx.ContainsLayerInMask(hit.collider.gameObject.layer, stageLayer))
+            if (MathEx.ContainsLayerInMask(hit.collider.gameObject.layer, stageLayer))
             {
                 foreach(var selected in selectedList)
                 {
                     selected.AIInputProvider.SetDestination(hit.point);
                 }
             }
-            else if(Utility.MathEx.MathEx.ContainsLayerInMask(hit.collider.gameObject.layer, selectLayer))
+            else if(MathEx.ContainsLayerInMask(hit.collider.gameObject.layer, selectLayer))
             {
                 var character=hit.collider.GetComponent<CharacterBrain>();
                 if(character.MainObjectData.GroupID==MainObjectData.GroupIDs.Enemy)
@@ -201,20 +202,37 @@ public class CharacterSelector : MonoBehaviour
                  ray: ray,
                  hitInfo: out RaycastHit hit,
                  maxDistance: Mathf.Infinity,
-                 layerMask: stageLayer,
+                 layerMask: stageLayer|selectLayer,
                  queryTriggerInteraction:QueryTriggerInteraction.Collide
              );
 
         if(isHit==false){return;}
-
-        if(Utility.MathEx.MathEx.ContainsLayerInMask(hit.collider.gameObject.layer, stageLayer)==false)
+        Vector3 destPos=new();
+        if(MathEx.ContainsLayerInMask(hit.collider.gameObject.layer, selectLayer))
+        {
+            if(hit.collider.GetComponent<MainObjectData>().GroupID==MainObjectData.GroupIDs.Enemy)
+            {
+                destPos=hit.transform.position;
+            }
+            else
+            {
+                return;
+            }
+            
+        }
+        else if(MathEx.ContainsLayerInMask(hit.collider.gameObject.layer, stageLayer))
+        {
+            destPos=hit.point;
+            
+        }
+        else
         {
             return;
         }
 
         foreach(var selected in selectedList)
         {
-            selected.DrawGizmosCalceCorners(hit.point);
+            selected.DrawGizmosCalceCorners(destPos);
         }
 
     }

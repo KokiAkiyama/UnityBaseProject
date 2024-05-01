@@ -39,6 +39,9 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
     float movedPathDistance=0f;
     public float MovedPathDistance=>movedPathDistance;
     public float RemainingPathDistance=> movePathDistance-movedPathDistance;
+
+    bool IsArriveThisTurn=>RemainingPathDistance<=ownerBrain.Param.ActionRange;
+
     public void SetDestination(Vector3 pos)
     {
 
@@ -46,6 +49,31 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
         movePathDistance=pathFinding.CalcCornersFromRange(ref pos,ref corners, ownerBrain.Param.ActionRange);
         movedPathDistance = 0f;
         pathFinding.SetDestination(pos);
+        //このターンで到達しない場合はターゲットから外す
+        if(IsArriveThisTurn==false && Target.Value!=null)
+        {
+            Target.Value=null;
+        }
+
+    }
+
+
+    bool CheckAttack()
+    {
+        //AIEyeSightを使ったターゲット搜索
+        if(Target.Value!=null)
+        {
+            foreach(var objectData in eyeSight.Founds)
+            {
+                var character=objectData.GetComponent<CharacterBrain>();
+                if(character==null){continue;}
+                if(Target.Value==character)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     void Awake()
@@ -71,8 +99,19 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
     {
         animator.SetInteger("StateType",(int)type);
     }
-
+    
+    public void StartTurn()
+    {
+        
+    }
+    
+    public void EndTurn()
+    {
+        Target.Value=null;
+    }
+    
     public void DrawGuizmosCalcCorners(Vector3 destPos,float limitRange)=>pathFinding.DrawGuizmosCalcCorners(destPos,limitRange);
+
 
     [System.Serializable]
     public abstract class AISBase:GenericStateMachine.StateBase
@@ -99,6 +138,8 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
                 AIInputProvider.ChangeState(StateType.Move);
                 return;
             }
+
+            
         }
     }
 
@@ -128,24 +169,13 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
             if (dir.sqrMagnitude >= 1.0f) dir.Normalize();
 
             AIInputProvider.moveVec = dir;
-          
 
-            //AIEyeSightを使ったターゲット搜索
-            if(AIInputProvider.Target.Value!=null)
+            //攻撃可能であれば自動で行う
+            if(AIInputProvider.CheckAttack())
             {
-                foreach(var objectData in AIInputProvider.eyeSight.Founds)
-                {
-                    var character=objectData.GetComponent<CharacterBrain>();
-                    if(character==null){continue;}
-
-                    if(AIInputProvider.Target.Value==character)
-                    {
-                        AIInputProvider.IsAttack=true;
-                        AIInputProvider.ChangeState(StateType.MeleeAttack);
-                        return;
-                    }
-
-                }
+                AIInputProvider.IsAttack=true;
+                AIInputProvider.ChangeState(StateType.MeleeAttack);
+                 return;
             }
         }
     }

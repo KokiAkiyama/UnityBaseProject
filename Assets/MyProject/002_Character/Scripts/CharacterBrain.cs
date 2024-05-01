@@ -36,7 +36,7 @@ public class CharacterBrain : MonoBehaviour
     [SerializeField] MainObjectData mainObjectData;
     public MainObjectData MainObjectData => mainObjectData;
 
-    public bool IsTurnEnd=false;
+    public BoolReactiveProperty IsTurnEnd=new(false);
 
     [SerializeField] CharacterIDs ID;
     
@@ -88,6 +88,32 @@ public class CharacterBrain : MonoBehaviour
             stateMachine.DoFixedUpdate();
         }
         );
+        //ターン開始時と終了時の処理
+        IsTurnEnd
+        .SkipLatestValueOnSubscribe()
+        .Subscribe(value =>
+        {
+            
+            if(value==false)
+            {
+                //ターン開始時
+                turnMaxParam.Copy(ref param);
+                AIInputProvider.StartTurn();
+
+            }
+            else
+            {
+                //ターン終了時
+
+                AIInputProvider.EndTurn();
+
+            }
+        }
+        
+        );
+        
+
+
         //キャラクターマネージャーに登録
         GameManager.Instance.CharacterManager.AddCharacter(this);
     }
@@ -101,14 +127,7 @@ public class CharacterBrain : MonoBehaviour
     {
         animator.SetInteger("StateType",(int)type);
     }
-    /// <summary>
-    /// ターン開始時に呼ばれる
-    /// </summary>
-    public void StartTurn()
-    {
-        turnMaxParam.Copy(ref param);
-    }
-
+    
     public void Attack()
     {
         if(AIInputProvider.Target.Value==null){return;}

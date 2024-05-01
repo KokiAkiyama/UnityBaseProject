@@ -15,4 +15,7 @@ public interface IInputProvider
     bool IsDead { get; }
 
     bool IsMove{ get; }
+
+    public void StartTurn();
+    public void EndTurn();
 }
