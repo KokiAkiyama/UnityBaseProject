@@ -59,6 +59,11 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
 
     }
 
+    void SearchEnemy()
+    {
+        //Collider[] colliders=Physics.OverlapSphere(transform.position, _radius, layer);
+    }
+
 
     bool CheckAttack()
     { 

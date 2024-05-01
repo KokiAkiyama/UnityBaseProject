@@ -14,6 +14,8 @@ public class TurnManager : MonoBehaviour
     /// </summary>
     [SerializeField] List<CharacterBrain> actionCharacters=new();
 
+    public List<CharacterBrain> ActionCharacters=>actionCharacters;
+
     [SerializeField,Tooltip("ターン一周ごとに発生する行動数")] int actionCount=0;
     /// <summary>
     /// 強制ターンエンド
