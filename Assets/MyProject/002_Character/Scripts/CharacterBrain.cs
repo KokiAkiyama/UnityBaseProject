@@ -97,7 +97,7 @@ public class CharacterBrain : MonoBehaviour
             if(value==false)
             {
                 //ターン開始時
-                turnMaxParam.Copy(ref param);
+                turnMaxParam.ResetTurn(ref param);
                 AIInputProvider.StartTurn();
 
             }

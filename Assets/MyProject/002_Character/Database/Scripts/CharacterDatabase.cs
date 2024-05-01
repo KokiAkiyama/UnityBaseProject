@@ -74,6 +74,13 @@ public class CharacterData
         copiedData.constitution =constitution;
         copiedData.intelligence =intelligence;
     }
+
+    public void ResetTurn(ref CharacterData copiedData)
+    {
+        copiedData.ActionRange  =ActionRange;
+        copiedData.ActionPoint  =ActionPoint;
+    }
+
 }
 [CreateAssetMenu(fileName = "CharacterDatabase",menuName ="My Object/CharacterDatabase")]
 public class CharacterDatabase : ScriptableObject
@@ -87,6 +94,12 @@ public class CharacterDatabase : ScriptableObject
     {
         var database=GetChatacrerData(id);
         database.Copy(ref copiedData);
+
+    }
+    public void ResetTurn(ref CharacterData copiedData,CharacterIDs id)
+    {
+        var database=GetChatacrerData(id);
+        database.ResetTurn(ref copiedData);
 
     }
     void OnValidate()
