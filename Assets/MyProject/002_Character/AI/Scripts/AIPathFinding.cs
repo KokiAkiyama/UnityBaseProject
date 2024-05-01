@@ -81,6 +81,7 @@ public class AIPathFinding : MonoBehaviour
     {
         NavMeshPath path = new NavMeshPath();
         bool canArrive=NavMesh.CalculatePath(transform.position,destPos,NavMesh.AllAreas,path);
+        path.GetCornersNonAlloc(path.corners);
         corners=path.corners.ToList();
         return canArrive;
     }

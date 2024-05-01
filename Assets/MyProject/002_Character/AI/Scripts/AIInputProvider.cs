@@ -44,6 +44,8 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
 
     public void SetDestination(Vector3 pos)
     {
+        if(ownerBrain.Param.ActionRange<=0f){return;}
+
 
         List<Vector3> corners=new();
         movePathDistance=pathFinding.CalcCornersFromRange(ref pos,ref corners, ownerBrain.Param.ActionRange);
@@ -59,7 +61,7 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
 
 
     bool CheckAttack()
-    {
+    { 
         if(ownerBrain.Param.ActionPoint<=0){return false;}
 
         //AIEyeSightを使ったターゲット搜索
