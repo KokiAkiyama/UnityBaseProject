@@ -44,10 +44,4 @@ public class CharacterManager : MonoBehaviour
 
         }).AddTo(this);
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
