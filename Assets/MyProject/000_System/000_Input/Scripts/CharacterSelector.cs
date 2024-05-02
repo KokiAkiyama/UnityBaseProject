@@ -8,6 +8,8 @@ using Utility.MathEx;
 
 public class CharacterSelector : MonoBehaviour
 {
+    [SerializeField] MainObjectData.GroupIDs groupID;
+
     [SerializeField]
     private ReactiveCollection<CharacterBrain> selectedList=new();
 
@@ -23,10 +25,10 @@ public class CharacterSelector : MonoBehaviour
     /// </summary>
     [SerializeField]
     List<CharacterBrain> ActiveControls=new();
-    void AddActveControl(CharacterBrain character)
+    public void AddActveControl(CharacterBrain character)
     {
-        // if(ActiveControls.Contains(character)){return;}
-        // ActiveControls.Add(character);
+        if (ActiveControls.Contains(character)) { return; }
+        ActiveControls.Add(character);
     }
 
     public void EndActveControl(CharacterBrain character)
@@ -109,7 +111,7 @@ public class CharacterSelector : MonoBehaviour
             if (isHit)
             {
                 var character= hit.collider.GetComponent<CharacterBrain>();
-                if(character && character.MainObjectData.GroupID==MainObjectData.GroupIDs.Player 
+                if(character && character.MainObjectData.GroupID== groupID
                 && selectedList.Contains(character)==false)
                 {
                     selectedList.Add(character);
@@ -124,6 +126,7 @@ public class CharacterSelector : MonoBehaviour
     {
         if(selectedList.Count<=0)return;
         if(CanControl==false)return;
+        if(GameManager.Instance.TurnManager.ActiveGroupID != groupID) { return; }
         if(GameManager.Instance.InputManager.Game["CamRotButton"].IsPressed()){return;}
         if (Input.GetMouseButtonDown(1))
         {
@@ -143,18 +146,16 @@ public class CharacterSelector : MonoBehaviour
             {
                 foreach(var selected in selectedList)
                 {
-                    AddActveControl(selected);
                     selected.AIInputProvider.SetDestination(hit.point);
                 }
             }
             else if(MathEx.ContainsLayerInMask(hit.collider.gameObject.layer, selectLayer))
             {
                 var character=hit.collider.GetComponent<CharacterBrain>();
-                if(character.MainObjectData.GroupID==MainObjectData.GroupIDs.Enemy)
+                if(character.MainObjectData.IsEnemies(groupID))
                 {
                     foreach (var selected in selectedList)
                     {
-                        AddActveControl(selected);
                         selected.AIInputProvider.Target.Value= character;
                     }
                 }
@@ -255,7 +256,16 @@ public class CharacterSelector : MonoBehaviour
 
         foreach(var selected in selectedList)
         {
-            Color color=GameManager.Instance.TurnManager.IsActionCharacter(selected)?Color.blue:Color.red;
+            Color color=Color.blue;
+            bool isActionCharacters = GameManager.Instance.TurnManager.IsActionCharacter(selected);
+            if (isActionCharacters == false)
+            {
+                color = Color.red;
+            }
+            else if (CanControl==false && ActiveControls.Contains(selected)==false)
+            {
+                color=Color.red;
+            }
 
             selected.DrawGizmosCalceCorners(destPos,color);
         }

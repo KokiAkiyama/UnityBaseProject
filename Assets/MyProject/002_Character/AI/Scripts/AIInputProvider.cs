@@ -44,13 +44,13 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
     
     public void SetDestination(Vector3 pos)
     {
-        if(ownerBrain.Param.ActionRange<=0f ||
-           GameManager.Instance.TurnManager.IsActionCharacter(ownerBrain)==false)
-           {
-            Target.Value=null;
-            //ownerBrain.EndActiveControl();
+        if (ownerBrain.Param.ActionRange <= 0f ||
+           GameManager.Instance.TurnManager.IsActionCharacter(ownerBrain) == false)
+        {
+            Target.Value = null;
+            
             return;
-            }
+        }
 
 
         List<Vector3> corners=new();
@@ -62,6 +62,9 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
         {
             Target.Value=null;
         }
+
+
+        ownerBrain.AddActiveControl();
 
     }
 
@@ -108,14 +111,6 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
             SetDestination(newTarget.transform.position);
         });
 
-        Target.
-        Where(newTarget=>newTarget==null)
-        .Skip(1)
-        .Subscribe(newTarget=>
-        {
-            ownerBrain.EndActiveControl();
-        });
-
         ownerBrain=GetComponentInParent<CharacterBrain>(); 
     }
 
@@ -153,7 +148,13 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
 
     [System.Serializable]
     public class AISWait : AISBase
-    { 
+    {
+        public override void OnEnter()
+        {
+            base.OnEnter();
+
+            AIInputProvider.ownerBrain.EndActiveControl();
+        }
         public override void OnUpdate()
         {
             base.OnUpdate();
@@ -177,6 +178,7 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
             {
                 AIInputProvider.ChangeState(StateType.Wait);
                 AIInputProvider.moveVec=Vector3.zero;
+                AIInputProvider.ownerBrain.EndActiveControl();
                 return;
             }
 

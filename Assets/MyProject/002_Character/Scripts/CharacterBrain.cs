@@ -175,6 +175,17 @@ public class CharacterBrain : MonoBehaviour
                 );
             transform.rotation = qRota;
     }
+    /// <summary>
+    /// 自身のアクション開始をセレクターに通知
+    /// </summary>
+    public void AddActiveControl()
+    {
+        //===========================================後で消す
+        if (mainObjectData.GroupID != MainObjectData.GroupIDs.Player) { return; }
+        //===========================================
+        GameManager.Instance.CharacterManager
+            .CharacterSelectorDic[mainObjectData.GroupID].AddActveControl(this);
+    }
 
     /// <summary>
     /// 自身のアクション終了をセレクターに通知

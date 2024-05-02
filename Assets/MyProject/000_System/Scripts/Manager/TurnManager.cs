@@ -30,8 +30,8 @@ public class TurnManager : MonoBehaviour
     /// <summary>
     /// インスペクター表示用
     /// </summary>
-    [SerializeField,Tooltip("行動中の陣営")] MainObjectData.GroupIDs TurnIDForInspector;
-    
+    [SerializeField,Tooltip("行動中の陣営")] MainObjectData.GroupIDs activeGroupID;
+    public MainObjectData.GroupIDs ActiveGroupID=>activeGroupID;
     /// <summary>
     /// 行動中のキャラクターかどうか
     /// </summary>
@@ -153,7 +153,7 @@ public class TurnManager : MonoBehaviour
         .SkipLatestValueOnSubscribe()
         .Subscribe(flg=>{
 
-            TurnIDForInspector=flg;
+            activeGroupID=flg;
 
         });
     }
