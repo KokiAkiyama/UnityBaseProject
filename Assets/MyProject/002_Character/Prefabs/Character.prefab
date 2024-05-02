@@ -50,7 +50,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f76a3802231b0421685a2cb7c76e6386, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eyeSight: {fileID: 5690782098575105404}
+  meleeSight: {fileID: 5690782098575105404}
   pathFinding: {fileID: 4436956423103061562}
   Target:
     value: {fileID: 0}
@@ -282,7 +282,8 @@ MonoBehaviour:
   moveSpeed: 2
   rotSpeed: 600
   mainObjectData: {fileID: 1352192898865312136}
-  IsTurnEnd: 0
+  IsTurnEnd:
+    value: 0
   ID: 0
   turnMaxParam:
     id: 0

@@ -19,7 +19,7 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
 
     Vector3 moveVec;
     public Vector3 MoveVector => moveVec;
-    [SerializeField] AIEyeSight eyeSight;
+    [SerializeField] AIEyeSight meleeSight;
     [SerializeField] AIPathFinding pathFinding;
     Animator animator;
 
@@ -72,7 +72,7 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
         //AIEyeSightを使ったターゲット搜索
         if(Target.Value!=null)
         {
-            foreach(var objectData in eyeSight.Founds)
+            foreach(var objectData in meleeSight.Founds)
             {
                 var character=objectData.GetComponent<CharacterBrain>();
                 if(character==null){continue;}
