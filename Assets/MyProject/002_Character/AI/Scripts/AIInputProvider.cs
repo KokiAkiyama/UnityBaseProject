@@ -41,11 +41,16 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
     public float RemainingPathDistance=> movePathDistance-movedPathDistance;
 
     bool IsArriveThisTurn=>RemainingPathDistance<=ownerBrain.Param.ActionRange;
-
+    
     public void SetDestination(Vector3 pos)
     {
         if(ownerBrain.Param.ActionRange<=0f ||
-           GameManager.Instance.TurnManager.IsActionCharacter(ownerBrain)==false){return;}
+           GameManager.Instance.TurnManager.IsActionCharacter(ownerBrain)==false)
+           {
+            Target.Value=null;
+            //ownerBrain.EndActiveControl();
+            return;
+            }
 
 
         List<Vector3> corners=new();
@@ -101,6 +106,14 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
                 return;
             }
             SetDestination(newTarget.transform.position);
+        });
+
+        Target.
+        Where(newTarget=>newTarget==null)
+        .Skip(1)
+        .Subscribe(newTarget=>
+        {
+            ownerBrain.EndActiveControl();
         });
 
         ownerBrain=GetComponentInParent<CharacterBrain>(); 

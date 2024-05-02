@@ -13,6 +13,14 @@ public class CharacterManager : MonoBehaviour
 
     [SerializeField] List<CharacterBrain> characters = new List<CharacterBrain>();
     public List<CharacterBrain> Characters=>characters;
+    /// <summary>
+    /// 各陣営のセレクターを登録
+    /// </summary>
+    [SerializeField] DictionaryEx<MainObjectData.GroupIDs,CharacterSelector> characterSelectorDic=new();
+    public CharacterSelector PlayerSelector => characterSelectorDic[MainObjectData.GroupIDs.Player];
+
+    public DictionaryEx<MainObjectData.GroupIDs,CharacterSelector>CharacterSelectorDic=>characterSelectorDic;
+
     public CharacterData GetChatacrerData(CharacterIDs id) => database.GetChatacrerData(id);
 
     
@@ -58,6 +66,8 @@ public class CharacterManager : MonoBehaviour
         
         foreach(CharacterBrain character in characters)
         {
+            if(character==null){continue;}
+            if(character.IsDead){continue;}
             if(character.MainObjectData.Check(groupIDFlg))
             {
                 result.Add(character);

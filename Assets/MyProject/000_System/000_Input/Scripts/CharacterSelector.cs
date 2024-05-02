@@ -17,6 +17,25 @@ public class CharacterSelector : MonoBehaviour
     LayerMask stageLayer;
 
     [SerializeField] Material selectMaterial;
+    /// <summary>
+    /// 現在アクション途中のキャラクター一覧
+    /// (要素が存在する時は新たな指示を与えることができない)
+    /// </summary>
+    [SerializeField]
+    List<CharacterBrain> ActiveControls=new();
+    void AddActveControl(CharacterBrain character)
+    {
+        // if(ActiveControls.Contains(character)){return;}
+        // ActiveControls.Add(character);
+    }
+
+    public void EndActveControl(CharacterBrain character)
+    {
+        if(ActiveControls.Contains(character)==false){return;}
+        ActiveControls.Remove(character);
+    }
+
+    public bool CanControl=>ActiveControls.Count<=0;
 
     //レンダラーの情報を保存する
     public class RendererStrage
@@ -62,12 +81,13 @@ public class CharacterSelector : MonoBehaviour
             ResetMaterials(characterBrain.Value);
 
         }).AddTo(this);
-
+        
     }
 
     // Update is called once per frame
     void Update()
     {
+        ActiveControls.RemoveAll(character=>character==null);
         SelectCharacter();
         MoveCharacter();
     }
@@ -103,6 +123,7 @@ public class CharacterSelector : MonoBehaviour
     void MoveCharacter()
     {
         if(selectedList.Count<=0)return;
+        if(CanControl==false)return;
         if(GameManager.Instance.InputManager.Game["CamRotButton"].IsPressed()){return;}
         if (Input.GetMouseButtonDown(1))
         {
@@ -122,6 +143,7 @@ public class CharacterSelector : MonoBehaviour
             {
                 foreach(var selected in selectedList)
                 {
+                    AddActveControl(selected);
                     selected.AIInputProvider.SetDestination(hit.point);
                 }
             }
@@ -132,6 +154,7 @@ public class CharacterSelector : MonoBehaviour
                 {
                     foreach (var selected in selectedList)
                     {
+                        AddActveControl(selected);
                         selected.AIInputProvider.Target.Value= character;
                     }
                 }

@@ -46,7 +46,7 @@ public class CharacterBrain : MonoBehaviour
     public CharacterData Param{get=>param;set=>param=value;}
     DamageParam attackParam=new();
 
-
+    public bool IsDead=>param.HP<=0;
 
     public void AddRootMotionDelta(ref Vector3 v)
     {
@@ -163,7 +163,7 @@ public class CharacterBrain : MonoBehaviour
         AIInputProvider.Target.Value=null;
         ChangeState(StateType.Idle);
     }
-
+    
     void Rotate()
     {
         var vMove=inputProvider.MoveVector;
@@ -174,6 +174,18 @@ public class CharacterBrain : MonoBehaviour
                 rotSpeed * Time.deltaTime
                 );
             transform.rotation = qRota;
+    }
+
+    /// <summary>
+    /// 自身のアクション終了をセレクターに通知
+    /// </summary>
+    public void EndActiveControl()
+    {
+        //===========================================後で消す
+        if(mainObjectData.GroupID!=MainObjectData.GroupIDs.Player){return;}
+        //===========================================
+        GameManager.Instance.CharacterManager
+            .CharacterSelectorDic[mainObjectData.GroupID].EndActveControl(this);
     }
 
     public void DrawGizmosCalceCorners(Vector3 destPos,Color color)=>AIInputProvider.DrawGuizmosCalcCorners(destPos,param.ActionRange,color);
