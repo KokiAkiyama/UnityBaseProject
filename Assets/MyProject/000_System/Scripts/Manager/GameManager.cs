@@ -50,4 +50,28 @@ public class GameManager : MonoBehaviour
     {
         return (~groupID) & (~MainObjectData.GroupIDs.Neutral);
     }
+    /// <summary>
+    /// 二つの陣営は敵対しているか
+    /// </summary>
+    /// <param name="fiest"></param>
+    /// <param name="second"></param>
+    /// <returns></returns>
+    public bool IsEnemies(MainObjectData.GroupIDs fiest, MainObjectData.GroupIDs second)
+    {
+        return fiest.HasFlag(GetEnemyFlag(second));
+    }
+}
+
+public static class MainObjectDataExtensions
+{
+    /// <summary>
+    /// 引数の陣営が敵対的かどうか
+    /// </summary>
+    /// <param name="self"></param>
+    /// <param name="checkID"></param>
+    /// <returns></returns>
+    public static bool IsEnemies(this MainObjectData self, MainObjectData.GroupIDs checkID)
+    {
+        return checkID.HasFlag(GameManager.Instance.GetEnemyFlag(self.GroupID));
+    }
 }
