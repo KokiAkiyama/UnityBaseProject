@@ -44,7 +44,8 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
 
     public void SetDestination(Vector3 pos)
     {
-        if(ownerBrain.Param.ActionRange<=0f){return;}
+        if(ownerBrain.Param.ActionRange<=0f ||
+           GameManager.Instance.TurnManager.IsActionCharacter(ownerBrain)==false){return;}
 
 
         List<Vector3> corners=new();
@@ -93,7 +94,12 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
         Where(newTarget=>newTarget!=null)
         .Subscribe(newTarget=>
         {
-            if(ownerBrain.Param.ActionPoint<=0){return;}
+            if(ownerBrain.Param.ActionPoint<=0 ||
+               GameManager.Instance.TurnManager.IsActionCharacter(ownerBrain)==false)
+            {
+                newTarget=null;
+                return;
+            }
             SetDestination(newTarget.transform.position);
         });
 
@@ -116,7 +122,7 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
         Target.Value=null;
     }
     
-    public void DrawGuizmosCalcCorners(Vector3 destPos,float limitRange)=>pathFinding.DrawGuizmosCalcCorners(destPos,limitRange);
+    public void DrawGuizmosCalcCorners(Vector3 destPos,float limitRange,Color color)=>pathFinding.DrawGuizmosCalcCorners(destPos,limitRange,color);
 
 
     [System.Serializable]

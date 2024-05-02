@@ -176,7 +176,7 @@ public class CharacterBrain : MonoBehaviour
             transform.rotation = qRota;
     }
 
-    public void DrawGizmosCalceCorners(Vector3 destPos)=>AIInputProvider.DrawGuizmosCalcCorners(destPos,param.ActionRange);
+    public void DrawGizmosCalceCorners(Vector3 destPos,Color color)=>AIInputProvider.DrawGuizmosCalcCorners(destPos,param.ActionRange,color);
 
 
     public class ASBase : GenericStateMachine.StateBase

@@ -31,6 +31,13 @@ public class TurnManager : MonoBehaviour
     /// インスペクター表示用
     /// </summary>
     [SerializeField,Tooltip("行動中の陣営")] MainObjectData.GroupIDs TurnIDForInspector;
+    
+    /// <summary>
+    /// 行動中のキャラクターかどうか
+    /// </summary>
+    /// <param name="character"></param>
+    /// <returns></returns>
+    public bool IsActionCharacter(CharacterBrain character)=>actionCharacters.Contains(character);
 
     /// <summary>
     /// 陣営ごとの行動順を作成

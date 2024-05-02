@@ -208,13 +208,13 @@ public class AIPathFinding : MonoBehaviour
     }  
 
 
-    public void DrawGuizmosCalcCorners(Vector3 destPos,float limitRange)
+    public void DrawGuizmosCalcCorners(Vector3 destPos,float limitRange,Color color)
     {
         //制限距離に応じて経路を計算
         List<Vector3> calcCorners=new();
         CalcCornersFromRange(ref destPos,ref calcCorners,limitRange);
         //結果を描画
-        Gizmos.color = Color.blue;
+        Gizmos.color = color;
         Gizmos.DrawWireSphere(destPos, 0.2f);
         Vector3 prevPos = destPos;
         

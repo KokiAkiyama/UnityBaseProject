@@ -232,7 +232,9 @@ public class CharacterSelector : MonoBehaviour
 
         foreach(var selected in selectedList)
         {
-            selected.DrawGizmosCalceCorners(destPos);
+            Color color=GameManager.Instance.TurnManager.IsActionCharacter(selected)?Color.blue:Color.red;
+
+            selected.DrawGizmosCalceCorners(destPos,color);
         }
 
     }
