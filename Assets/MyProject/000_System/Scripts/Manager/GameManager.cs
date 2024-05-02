@@ -72,6 +72,6 @@ public static class MainObjectDataExtensions
     /// <returns></returns>
     public static bool IsEnemies(this MainObjectData self, MainObjectData.GroupIDs checkID)
     {
-        return checkID.HasFlag(GameManager.Instance.GetEnemyFlag(self.GroupID));
+        return GameManager.Instance.GetEnemyFlag(self.GroupID).HasFlag(checkID);
     }
 }
