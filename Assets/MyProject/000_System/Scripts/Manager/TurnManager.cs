@@ -105,7 +105,8 @@ public class TurnManager : MonoBehaviour
             
             actionCharacters=turnList[nextIdx];
             //ターンの進行を通知
-            TurnChangeRP.Value=actionCharacters.First().MainObjectData.GroupID;
+            //(一周したときに同じ陣営のターンになることを想定し、同じ値でも通知する）
+            TurnChangeRP.SetValueAndForceNotify(actionCharacters.First().MainObjectData.GroupID);
         }
         
         //ターンエンドフラグをリセット

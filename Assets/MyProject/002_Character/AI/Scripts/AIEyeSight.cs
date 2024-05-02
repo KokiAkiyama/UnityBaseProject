@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Triggers;
@@ -53,6 +54,9 @@ public class AIEyeSight : MonoBehaviour
                 //�ǉ�
                 Founds.Add(mainObject);
             }
+
+            //近い順にソート
+            Founds.OrderBy(character => (transform.position-character.transform.position).magnitude);
 
             await UniTask.Delay(200);
         }

@@ -41,4 +41,13 @@ public class GameManager : MonoBehaviour
 
 
     }
+    /// <summary>
+    /// 敵対する陣営を取得
+    /// </summary>
+    /// <param name="groupID"></param>
+    /// <returns></returns>
+    public MainObjectData.GroupIDs GetEnemyFlag(MainObjectData.GroupIDs groupID)
+    {
+        return (~groupID) & (~MainObjectData.GroupIDs.Neutral);
+    }
 }
