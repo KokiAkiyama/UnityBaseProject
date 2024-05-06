@@ -5,6 +5,7 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System.Linq;
 using System;
+using UnityEngine.TextCore.Text;
 
 /// <summary>
 /// 特定の陣営を指揮するAI
@@ -13,7 +14,10 @@ public class AIBrain : Group
 {
 
     bool isActive=false;
-
+    /// <summary>
+    /// ターン開始時の1フレーム目か
+    /// </summary>
+    bool isTurnFirstFlame = true;
 
     //===================================================
     //Unityイベント
@@ -28,44 +32,32 @@ public class AIBrain : Group
         .Subscribe(id=>
         {
             isActive=(id==groupID);
-        
+
+            if (isActive) isTurnFirstFlame = true;
+
         }).AddTo(this);
     }
-
+    
     async void Update()
     {
         if(isActive==false)return;
-        
+
         var turnManager=GameManager.Instance.TurnManager;
-        var cancelToken = this.GetCancellationTokenOnDestroy();
         foreach (var character in turnManager.ActionCharacters)
         {
             if(character==null)continue;
 
+            ////============================
+            ////行動終了まで待機
+            ////============================
+            await WaitForEndActive(character);
+
             SearchEnemy(character);
-
-            //============================
-            //行動終了まで待機
-            //============================
-            while (actives.CanControl==false)
-            {
-                try
-                {
-                    await UniTask.DelayFrame(1, cancellationToken: cancelToken);
-                }
-                catch (OperationCanceledException oce)
-                {
-                    Debug.Log(oce.Message);
-                    return;
-                }
-            }
-
-            character.IsTurnEnd.Value = true;
 
             //controlCharacter.IsTurnEnd.Value=true;
         }
-        
-        isActive=false;
+
+
         
     }
 
@@ -90,7 +82,38 @@ public class AIBrain : Group
 
         character.AIInputProvider.Target.Value=enemies.First();
 
+
+        
     }
 
-    
+
+    async UniTask WaitForEndActive(CharacterBrain character)
+    {
+        var cancelToken = this.GetCancellationTokenOnDestroy();
+
+        while (cancelToken.IsCancellationRequested == false)
+        {
+            if (isTurnFirstFlame)
+            {
+                isTurnFirstFlame = false;
+                break;
+            }
+
+            try
+            {
+                await UniTask.DelayFrame(1, cancellationToken: cancelToken);
+            }
+            catch (OperationCanceledException oce)
+            {
+                Debug.Log(oce.Message);
+                return;
+            }
+
+            if (actives.CanControl)
+            {
+                character.IsTurnEnd.Value = true;
+                break;
+            }
+        }
+    }
 }
