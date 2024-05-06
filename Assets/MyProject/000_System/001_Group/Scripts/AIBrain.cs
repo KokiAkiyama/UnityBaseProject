@@ -8,15 +8,18 @@ using System.Linq;
 /// <summary>
 /// 特定の陣営を指揮するAI
 /// </summary>
-public class AIBrain : MonoBehaviour
+public class AIBrain : Group
 {
-    [SerializeField]MainObjectData.GroupIDs groupID=MainObjectData.GroupIDs.Enemy;
-
+    
     [SerializeField] CharacterBrain controlCharacter;
 
     bool isActive=false;
 
-    // Start is called before the first frame update
+
+    //===================================================
+    //Unityイベント
+    //===================================================
+
     void Start()
     {
         
@@ -54,7 +57,9 @@ public class AIBrain : MonoBehaviour
         
     }
 
-
+    //===================================================
+    //固有
+    //===================================================
     void SearchEnemy()
     {
         var gameManager=GameManager.Instance;
@@ -75,6 +80,5 @@ public class AIBrain : MonoBehaviour
 
     }
 
-
-
+    
 }

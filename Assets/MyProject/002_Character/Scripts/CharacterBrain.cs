@@ -184,7 +184,7 @@ public class CharacterBrain : MonoBehaviour
         if (mainObjectData.GroupID != MainObjectData.GroupIDs.Player) { return; }
         //===========================================
         GameManager.Instance.CharacterManager
-            .CharacterSelectorDic[mainObjectData.GroupID].AddActveControl(this);
+            .GroupDic[mainObjectData.GroupID].AddActveControl(this);
     }
 
     /// <summary>
@@ -196,7 +196,7 @@ public class CharacterBrain : MonoBehaviour
         if(mainObjectData.GroupID!=MainObjectData.GroupIDs.Player){return;}
         //===========================================
         GameManager.Instance.CharacterManager
-            .CharacterSelectorDic[mainObjectData.GroupID].EndActveControl(this);
+            .GroupDic[mainObjectData.GroupID].EndActveControl(this);
     }
 
     public void DrawGizmosCalceCorners(Vector3 destPos,Color color)=>AIInputProvider.DrawGuizmosCalcCorners(destPos,param.ActionRange,color);

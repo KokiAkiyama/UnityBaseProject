@@ -1,10 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using UniRx;
 using UniRx.Triggers;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class CharacterManager : MonoBehaviour
@@ -14,16 +12,14 @@ public class CharacterManager : MonoBehaviour
     [SerializeField] List<CharacterBrain> characters = new List<CharacterBrain>();
     public List<CharacterBrain> Characters=>characters;
     /// <summary>
-    /// 各陣営のセレクターを登録
+    /// 各陣営のコントローラーを登録
     /// </summary>
-    [SerializeField] DictionaryEx<MainObjectData.GroupIDs,ActiveSelector> characterSelectorDic=new();
-    public ActiveSelector PlayerSelector => characterSelectorDic[MainObjectData.GroupIDs.Player];
+    [SerializeField] DictionaryEx<MainObjectData.GroupIDs,Group> groupDic=new();
+    public PlayerController PlayerSelector => groupDic[MainObjectData.GroupIDs.Player] as PlayerController;
 
-    public DictionaryEx<MainObjectData.GroupIDs,ActiveSelector>CharacterSelectorDic=>characterSelectorDic;
+    public DictionaryEx<MainObjectData.GroupIDs, Group> GroupDic=>groupDic;
 
     public CharacterData GetChatacrerData(CharacterIDs id) => database.GetChatacrerData(id);
-
-    
 
     public void Copy(ref CharacterData copiedData,CharacterIDs id)=>database.Copy(ref copiedData,id);
 

@@ -5,9 +5,8 @@ using UnityEngine;
 using Utility.MathEx;
 using UniRx;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : Group
 {
-    [SerializeField] MainObjectData.GroupIDs groupID;
 
     [SerializeField]
     Camera activeCamera;
@@ -37,6 +36,17 @@ public class PlayerController : MonoBehaviour
 
     }
     Dictionary<CharacterBrain, RendererStrage> rendererDic = new();
+
+
+    //===================================================
+    //継承
+    //===================================================
+    public override void AddActveControl(CharacterBrain character) => actives.AddActveControl(character);
+
+    public override void EndActveControl(CharacterBrain character)=>actives.EndActveControl(character);
+    //===================================================
+    //Unityイベント
+    //===================================================
     void Start()
     {
         selectedList.
@@ -68,14 +78,18 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    // Update is called once per frame
+    //===================================================
+    //Unityイベント
+    //===================================================
     void Update()
     {
         SelectCharacter();
         MoveCharacter();
     }
 
-
+    //===================================================
+    //固有
+    //===================================================
     void SelectCharacter()
     {
         if (Input.GetMouseButtonDown(0))
@@ -195,7 +209,9 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-
+    //===================================================
+    //ギズモ
+    //===================================================
     private void OnDrawGizmos()
     {
         if (selectedList.Count <= 0) { return; }
@@ -253,4 +269,6 @@ public class PlayerController : MonoBehaviour
         }
 
     }
+
+
 }
