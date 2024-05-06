@@ -16,10 +16,10 @@ public class CharacterManager : MonoBehaviour
     /// <summary>
     /// 各陣営のセレクターを登録
     /// </summary>
-    [SerializeField] DictionaryEx<MainObjectData.GroupIDs,CharacterSelector> characterSelectorDic=new();
-    public CharacterSelector PlayerSelector => characterSelectorDic[MainObjectData.GroupIDs.Player];
+    [SerializeField] DictionaryEx<MainObjectData.GroupIDs,ActiveSelector> characterSelectorDic=new();
+    public ActiveSelector PlayerSelector => characterSelectorDic[MainObjectData.GroupIDs.Player];
 
-    public DictionaryEx<MainObjectData.GroupIDs,CharacterSelector>CharacterSelectorDic=>characterSelectorDic;
+    public DictionaryEx<MainObjectData.GroupIDs,ActiveSelector>CharacterSelectorDic=>characterSelectorDic;
 
     public CharacterData GetChatacrerData(CharacterIDs id) => database.GetChatacrerData(id);
 
