@@ -12,9 +12,6 @@ public class PlayerController : Group
     Camera activeCamera;
 
     [SerializeField]
-    ActiveSelector actives;
-
-    [SerializeField]
     LayerMask controlLayer;
     [SerializeField]
     LayerMask stageLayer;
@@ -37,13 +34,6 @@ public class PlayerController : Group
     }
     Dictionary<CharacterBrain, RendererStrage> rendererDic = new();
 
-
-    //===================================================
-    //Œp³
-    //===================================================
-    public override void AddActveControl(CharacterBrain character) => actives.AddActveControl(character);
-
-    public override void EndActveControl(CharacterBrain character)=>actives.EndActveControl(character);
     //===================================================
     //UnityƒCƒxƒ“ƒg
     //===================================================

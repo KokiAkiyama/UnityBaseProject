@@ -179,25 +179,15 @@ public class CharacterBrain : MonoBehaviour
     /// 自身のアクション開始をセレクターに通知
     /// </summary>
     public void AddActiveControl()
-    {
-        //===========================================後で消す
-        if (mainObjectData.GroupID != MainObjectData.GroupIDs.Player) { return; }
-        //===========================================
-        GameManager.Instance.CharacterManager
+    => GameManager.Instance.CharacterManager
             .GroupDic[mainObjectData.GroupID].AddActveControl(this);
-    }
 
     /// <summary>
     /// 自身のアクション終了をセレクターに通知
     /// </summary>
     public void EndActiveControl()
-    {
-        //===========================================後で消す
-        if(mainObjectData.GroupID!=MainObjectData.GroupIDs.Player){return;}
-        //===========================================
-        GameManager.Instance.CharacterManager
+    =>GameManager.Instance.CharacterManager
             .GroupDic[mainObjectData.GroupID].EndActveControl(this);
-    }
 
     public void DrawGizmosCalceCorners(Vector3 destPos,Color color)=>AIInputProvider.DrawGuizmosCalcCorners(destPos,param.ActionRange,color);
 

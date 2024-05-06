@@ -1,8 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using static UnityEditor.PlayerSettings;
+
 [RequireComponent(typeof(NavMeshAgent))]
 
 public class AIPathFinding : MonoBehaviour
@@ -68,12 +71,14 @@ public class AIPathFinding : MonoBehaviour
     /// <param name="destPos">目的地</param>
     /// <param name="calcCorners">経路を格納</param>
     /// <param name="limitRange">制限距離</param>
-    public float  CalcCornersFromRange(ref Vector3 destPos,ref List<Vector3> corners,float limitRange)
+    /// <returns>指定された目的地に（再計算無しで）到着できるか</returns>
+
+    public bool CalcCornersFromRange(ref Vector3 destPos,ref List<Vector3> corners,float limitRange, out float totalDistance)
     {
         //経路を計算
         CalcCorners(ref corners,ref destPos);
         //制限距離に応じて再計算
-        return ReCalcCornersFromRange(ref corners,ref destPos,transform.position,limitRange);
+        return ReCalcCornersFromRange(ref corners,ref destPos,transform.position,limitRange,out totalDistance);
     }
 
     //経路計算
@@ -148,25 +153,30 @@ public class AIPathFinding : MonoBehaviour
     /// <param name="resultPos">移動できる限界座標</param>
     /// <param name="nowPos">現在のエージェントの座標</param>
     /// <param name="limitRange">移動可能距離</param>
-    public static float ReCalcCornersFromRange(ref List<Vector3> corners,ref Vector3 resultPos,Vector3 nowPos,float limitRange)
+    /// <param name="totalDistance">算出された移動距離</param>
+    public static bool ReCalcCornersFromRange(ref List<Vector3> corners,ref Vector3 resultPos,Vector3 nowPos,float limitRange,out float totalDistance)
     {
-        float totalDistance=0f;
-        //経路がない場合は制限距離を計算して終了
-        if(corners.Count == 0)
+        bool isArrivable = true;
+
+        if (corners.Count==0)
         {
-            totalDistance=(resultPos-nowPos).magnitude;
-            if(totalDistance <= 0)
+            totalDistance = (resultPos - nowPos).magnitude;
+
+
+            if (totalDistance!=0f && totalDistance > limitRange)
             {
-                return totalDistance;
+                //目的地までの移動限界座標の算出
+                float resultDist = limitRange - totalDistance;
+                Vector3 moveDir = (resultPos - nowPos).normalized;
+                resultPos = nowPos + (moveDir * resultDist);
+                totalDistance = limitRange;
+                isArrivable = false;
             }
 
-            if(totalDistance > limitRange)
-            {
-                Vector3 moveDir=(resultPos-nowPos).normalized;
-                resultPos=nowPos+(moveDir*limitRange);
-            }
-            return totalDistance;
+            return isArrivable; 
         }
+  
+        
 
         Vector3[] copy=new Vector3 [corners.Count];
         corners.CopyTo(copy);
@@ -178,7 +188,9 @@ public class AIPathFinding : MonoBehaviour
         Vector3 prevPos=new();
         bool isFirst = true;
 
-        foreach(Vector3 pos in copy)
+        totalDistance = 0f;
+
+        foreach (Vector3 pos in copy)
         {
             if(isFirst)
             {
@@ -196,7 +208,7 @@ public class AIPathFinding : MonoBehaviour
                 Vector3 moveDir=(pos-prevPos).normalized;
                 resultPos=prevPos+(moveDir*resultDist);
                 totalDistance = limitRange;
-
+                isArrivable = false;
                 break;
             }
             totalDistance+=distance;
@@ -204,7 +216,8 @@ public class AIPathFinding : MonoBehaviour
             prevPos=pos;
         }
         corners.Reverse();
-        return totalDistance;
+
+        return isArrivable;
     }  
 
 
@@ -212,7 +225,7 @@ public class AIPathFinding : MonoBehaviour
     {
         //制限距離に応じて経路を計算
         List<Vector3> calcCorners=new();
-        CalcCornersFromRange(ref destPos,ref calcCorners,limitRange);
+        CalcCornersFromRange(ref destPos,ref calcCorners,limitRange,out float totalDistance);
         //結果を描画
         Gizmos.color = color;
         Gizmos.DrawWireSphere(destPos, 0.2f);

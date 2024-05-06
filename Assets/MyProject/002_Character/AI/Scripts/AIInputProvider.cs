@@ -54,11 +54,11 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
 
 
         List<Vector3> corners=new();
-        movePathDistance=pathFinding.CalcCornersFromRange(ref pos,ref corners, ownerBrain.Param.ActionRange);
+        bool isArrivable=pathFinding.CalcCornersFromRange(ref pos,ref corners, ownerBrain.Param.ActionRange,out movePathDistance);
         movedPathDistance = 0f;
         pathFinding.SetDestination(pos);
         //このターンで到達しない場合はターゲットから外す
-        if(IsArriveThisTurn==false && Target.Value!=null)
+        if(isArrivable==false && Target.Value!=null)
         {
             Target.Value=null;
         }
@@ -153,7 +153,7 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
         {
             base.OnEnter();
 
-            AIInputProvider.ownerBrain.EndActiveControl();
+            
         }
         public override void OnUpdate()
         {
@@ -177,8 +177,8 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
             if(AIInputProvider.pathFinding.IsAlived && AIInputProvider.Target.Value==null)
             {
                 AIInputProvider.ChangeState(StateType.Wait);
-                AIInputProvider.moveVec=Vector3.zero;
                 AIInputProvider.ownerBrain.EndActiveControl();
+                AIInputProvider.moveVec=Vector3.zero;
                 return;
             }
 
@@ -222,6 +222,7 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
             if(AIInputProvider.IsAttack==false)
             {
                 AIInputProvider.ChangeState(StateType.Wait);
+                AIInputProvider.ownerBrain.EndActiveControl();
                 return;
             }
         }

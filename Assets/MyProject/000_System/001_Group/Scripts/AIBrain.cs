@@ -4,14 +4,13 @@ using UniRx;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System.Linq;
+using System;
 
 /// <summary>
 /// 特定の陣営を指揮するAI
 /// </summary>
 public class AIBrain : Group
 {
-    
-    [SerializeField] CharacterBrain controlCharacter;
 
     bool isActive=false;
 
@@ -33,22 +32,35 @@ public class AIBrain : Group
         }).AddTo(this);
     }
 
-    void Update()
+    async void Update()
     {
         if(isActive==false)return;
         
         var turnManager=GameManager.Instance.TurnManager;
-
-        foreach(var character in turnManager.ActionCharacters)
+        var cancelToken = this.GetCancellationTokenOnDestroy();
+        foreach (var character in turnManager.ActionCharacters)
         {
             if(character==null)continue;
-    
-            controlCharacter=character;
-            
-            SearchEnemy();
+
+            SearchEnemy(character);
+
             //============================
-            //行動終了
+            //行動終了まで待機
             //============================
+            while (actives.CanControl==false)
+            {
+                try
+                {
+                    await UniTask.DelayFrame(1, cancellationToken: cancelToken);
+                }
+                catch (OperationCanceledException oce)
+                {
+                    Debug.Log(oce.Message);
+                    return;
+                }
+            }
+
+            character.IsTurnEnd.Value = true;
 
             //controlCharacter.IsTurnEnd.Value=true;
         }
@@ -60,14 +72,14 @@ public class AIBrain : Group
     //===================================================
     //固有
     //===================================================
-    void SearchEnemy()
+    void SearchEnemy(CharacterBrain character)
     {
         var gameManager=GameManager.Instance;
         List<CharacterBrain> enemies=new();
 
         gameManager.CharacterManager.Search(
-        gameManager.GetEnemyFlag(controlCharacter.MainObjectData.GroupID),
-        controlCharacter,
+        gameManager.GetEnemyFlag(character.MainObjectData.GroupID),
+        character,
         ref enemies);
 
 
@@ -76,7 +88,7 @@ public class AIBrain : Group
             return;
         }
 
-        controlCharacter.AIInputProvider.Target.Value=enemies.First();
+        character.AIInputProvider.Target.Value=enemies.First();
 
     }
 
