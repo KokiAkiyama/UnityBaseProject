@@ -138,4 +138,16 @@ public class CharacterAnimatorEvents : MonoBehaviour
         }
     }
 
+    [Serializable]
+    public class CharacterEvent_EndDamage : CharaEventBase
+    {
+        public override void OnEvent(Animator animator)
+        {
+            var owner = GetOwner(animator);
+
+            owner.Brain.EndDamage();
+
+        }
+    }
+
 }

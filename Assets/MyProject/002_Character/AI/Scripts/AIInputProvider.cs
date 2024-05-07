@@ -14,8 +14,11 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
         Move,
         MeleeAttack,
         Dead,
+        Damage,
     }
     CharacterBrain ownerBrain;
+
+    StateType stateType=StateType.Wait;
 
     Vector3 moveVec;
     public Vector3 MoveVector => moveVec;
@@ -32,7 +35,9 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
     public bool IsDead{get;set;}=false;
     
     public bool IsMove{get=>moveVec.magnitude>0f;}
+    public bool IsDamage{get;set;}=false;
 
+    public bool CanControl=>(stateType==StateType.Wait);
     public float AgentHeight => pathFinding.transform.position.y;
 
     float movePathDistance=0f;
@@ -118,6 +123,7 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
     public void ChangeState(StateType type)
     {
         animator.SetInteger("StateType",(int)type);
+        stateType=type;
     }
     
     public void StartTurn()
@@ -165,6 +171,11 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
                 return;
             }
 
+            if(AIInputProvider.IsDamage)
+            {
+                AIInputProvider.ChangeState(StateType.Damage);
+                return;
+            }
             
         }
     }
@@ -232,5 +243,19 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
     public class AISDead : AISBase
     {
         
+    }
+
+    [Serializable]
+    public class AISDamage : AISBase
+    {
+        public override void OnUpdate()
+        {
+            base.OnUpdate();
+            if(AIInputProvider.IsDamage==false)
+            {
+                AIInputProvider.ChangeState(StateType.Wait);
+                return;
+            }
+        }
     }
 }

@@ -12,7 +12,8 @@ public class CharacterBrain : MonoBehaviour
         Idle,
         Walk,
         MeleeAttack,
-        Dead
+        Dead,
+        Damage,
     }
 
     public struct AttackParam
@@ -155,6 +156,10 @@ public class CharacterBrain : MonoBehaviour
             ChangeState(StateType.Dead);
 
         }
+        else
+        {
+            ChangeState(StateType.Damage);
+        }
     }
 
     public void EndAttack()
@@ -164,6 +169,13 @@ public class CharacterBrain : MonoBehaviour
         ChangeState(StateType.Idle);
     }
     
+    public void EndDamage()
+    {
+        inputProvider.IsDamage=false;
+        ChangeState(StateType.Idle);
+    }
+
+
     void Rotate()
     {
         var vMove=inputProvider.MoveVector;
@@ -271,6 +283,23 @@ public class CharacterBrain : MonoBehaviour
             base.OnEnter();
 
             Owner.AIInputProvider.IsDead=true;
+        }
+
+    }
+
+    [System.Serializable]
+    public class ASDamage : ASBase
+    {
+        public override void OnEnter()
+        {
+            base.OnEnter();
+            Owner.inputProvider.IsDamage=true;
+        }
+
+        public override void OnExit()
+        {
+            base.OnExit();
+            Owner.inputProvider.IsDamage=false;
         }
 
     }

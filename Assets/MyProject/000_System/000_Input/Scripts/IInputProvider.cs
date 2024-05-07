@@ -16,6 +16,12 @@ public interface IInputProvider
 
     bool IsMove{ get; }
 
+    bool IsDamage{get;set;}
+    /// <summary>
+    /// 操作可能か
+    /// </summary>
+    bool CanControl{get;}
+
     public void StartTurn();
     public void EndTurn();
 }
