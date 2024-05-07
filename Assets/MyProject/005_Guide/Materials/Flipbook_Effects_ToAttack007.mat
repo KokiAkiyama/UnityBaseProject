@@ -2,21 +2,28 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!21 &2100000
 Material:
-  serializedVersion: 6
+  serializedVersion: 8
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Flipbook_Effects_ToAttack007
   m_Shader: {fileID: 4800000, guid: 30bc8fd703be46640bd61c9fef44f54f, type: 3}
-  m_ShaderKeywords: _EFFECTSBACKFRONT_EFFECT_BACK _MASK_SELECTS_SPHERE _MASK__LIGHTNINGMASK
-    _TEXTURERGBSWITCH_R
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - _MASK_SELECTS_SPHERE
+  m_InvalidKeywords:
+  - _EFFECTSBACKFRONT_EFFECT_BACK
+  - _MASK__LIGHTNINGMASK
+  - _TEXTURERGBSWITCH_R
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -36,6 +43,7 @@ Material:
         m_Texture: {fileID: 2800000, guid: 941b466bc43a43541a115fd484f9b4dc, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    m_Ints: []
     m_Floats:
     - _AlphaCutoff: 0.5
     - _EffectsBackFront: 0
@@ -106,5 +114,5 @@ Material:
     - _Mask_FianalColor: {r: 1, g: 1, b: 1, a: 1}
     - _NoisexyTilingyzOffset: {r: 9.96, g: 1, b: 0, a: 0}
     - _Texture_Color: {r: 1, g: 1, b: 1, a: 1}
-    - _TintColor: {r: 1, g: 1, b: 1, a: 1}
+    - _TintColor: {r: 1, g: 0.5137255, b: 0, a: 0.7294118}
   m_BuildTextureStacks: []

@@ -33,6 +33,7 @@ public class PlayerController : Group
 
     RaycastEx mouseRaycast=new();
 
+    [SerializeField]LineRenderer routeGuideRenderer;
 
 
     //===================================================
@@ -236,6 +237,7 @@ public class PlayerController : Group
 
     void UpdateDestPosGuide()
     {
+        
         if(selectedCharacter.Value==null || mouseRaycast.IsHit==false)
         {
             if(destPosGuide.enabled)
@@ -244,6 +246,8 @@ public class PlayerController : Group
             }
             return;
         }
+
+        routeGuideRenderer.positionCount = 0;
 
         if(destPosGuide.enabled==false)
         {
@@ -268,8 +272,9 @@ public class PlayerController : Group
         selectedCharacter.Value
         .AIInputProvider.CalcRouteFromRange(ref destPos,ref corners,out float totalDistance);
         destPosGuide.transform.position=destPos;
-
-        
+        corners.Reverse();
+        corners.Add(destPos);
+        routeGuideRenderer.SetPositions(corners.ToArray());
     }
 
     //===================================================
