@@ -242,12 +242,14 @@ MonoBehaviour:
     renderers: []
     ReplacedDic:
       _list:
-      - Key: {fileID: 2100000, guid: de5a3e1b24f96504c8a6f2e5e95b0e13, type: 2}
-        Value: {fileID: 2100000, guid: d210ab4530b06204982c8e178bde8566, type: 2}
-      - Key: {fileID: 2100000, guid: b1565467a6879ea46be6d126906c4700, type: 2}
-        Value: {fileID: 2100000, guid: b121cbe82badc664db4d3143ddf71820, type: 2}
-      - Key: {fileID: 2100000, guid: 5e545b9d57da22f4d8807147116bc66c, type: 2}
-        Value: {fileID: 2100000, guid: 8e77404dd508e11468d145f83162fe33, type: 2}
+      - Key: {fileID: 6363972876646810020}
+        Value: {fileID: 2100000, guid: 8bbd0a65cccf54d3788449d856d0eb42, type: 2}
+      - Key: {fileID: 6363972877764928592}
+        Value: {fileID: 2100000, guid: 6e1be9979acd14c62a7d50f847172c06, type: 2}
+      - Key: {fileID: 6363972876524433418}
+        Value: {fileID: 2100000, guid: 5c7b4d7607f4a4133970425585c32178, type: 2}
+  ToAttackMode:
+    value: 0
 --- !u!1 &6363972877764928592
 GameObject:
   m_ObjectHideFlags: 0

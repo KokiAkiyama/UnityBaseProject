@@ -256,11 +256,11 @@ public class PlayerController : Group
         if(MathEx.ContainsLayerInMask(target.collider.gameObject.layer, controlLayer))
         {
             var character=target.collider.GetComponent<CharacterBrain>();
-            destPosGuide.SetToAttackMode(character.MainObjectData.IsEnemies(GroupID));
+            destPosGuide.ToAttackMode.Value=character.MainObjectData.IsEnemies(GroupID);
         }
         else
         {
-            destPosGuide.SetToAttackMode(false);
+            destPosGuide.ToAttackMode.Value=false;
         }
 
         Vector3 destPos=mouseRayHitPos;

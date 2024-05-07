@@ -288,7 +288,7 @@ namespace Utility.UnityEngineEx
         public List<Renderer> renderers;
 
 		[SerializeField]
-		DictionaryEx<Material,Material> ReplacedDic=new();
+		DictionaryEx<GameObject,Material> ReplacedDic=new();
         /// <summary>
         /// 引数以下のレンダラーを全て取得
         /// </summary>
@@ -313,9 +313,9 @@ namespace Utility.UnityEngineEx
 
 				if(ReplacedDic.Count > 0)
 				{
-					if(ReplacedDic.ContainsKey(renderer.material))
+					if(ReplacedDic.ContainsKey(renderer.gameObject))
 					{
-						renderer.material=ReplacedDic[renderer.material];
+						renderer.material=ReplacedDic[renderer.gameObject];
 						continue;
 					}
 					
