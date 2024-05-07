@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 namespace Utility.UnityEngineEx
@@ -214,4 +215,60 @@ namespace Utility.UnityEngineEx
 			isActive = false;
 		}
 	}
+
+	public class RaycastEx
+    {
+        List<RaycastHit> hitsInfo=new();
+        public List<RaycastHit> HitsInfo=>hitsInfo;
+        public bool IsHit=>hitsInfo.Count>0;
+		
+
+        public void Raycast(Ray ray,float maxDistance,LayerMask layerMask,QueryTriggerInteraction queryTriggerInteraction=QueryTriggerInteraction.Collide)
+        {
+			
+            hitsInfo = Physics.RaycastAll(
+             ray: ray,
+             maxDistance: maxDistance,
+             layerMask: layerMask,
+             queryTriggerInteraction: queryTriggerInteraction
+         ).ToList();
+            
+			//近い順にソート
+			hitsInfo=hitsInfo.OrderBy(hitInfo=>(hitInfo.point-ray.origin).magnitude).ToList();
+
+
+        }
+
+		
+
+		public bool IsHitLayer(int mask)
+		{
+			if(IsHit==false)return false;
+
+			foreach(RaycastHit hit in hitsInfo)
+			{
+				if(((mask >> hit.collider.gameObject.layer) & 1) == 1)
+				{
+					return true;
+				}
+			}
+			return false;
+			
+		}
+
+		public bool GetHitInfoFromLayer(int mask,out List<RaycastHit> results)
+		{
+			results=new();
+			foreach(RaycastHit hit in hitsInfo)
+			{
+				if(((mask >> hit.collider.gameObject.layer) & 1) == 1)
+				{
+					results.Add(hit);
+				}
+			}
+
+			return results.Count>0;
+		}
+
+    }
 }

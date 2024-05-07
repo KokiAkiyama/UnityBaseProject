@@ -46,15 +46,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   groupID: 1
-  activeCamera: {fileID: 0}
   actives: {fileID: 5025877308324766356}
+  activeCamera: {fileID: 0}
   controlLayer:
     serializedVersion: 2
     m_Bits: 64
   stageLayer:
     serializedVersion: 2
     m_Bits: 256
+  selectedCharacter:
+    value: {fileID: 0}
   controlMaterial: {fileID: 2100000, guid: 266d745742ad944b29467f6a00c17c5b, type: 2}
+  destPosGuidePrefab: {fileID: 6363972876970291531, guid: c63d60ae08d3e4a1f8de1e5800fd8a8b,
+    type: 3}
 --- !u!114 &5025877308324766356
 MonoBehaviour:
   m_ObjectHideFlags: 0

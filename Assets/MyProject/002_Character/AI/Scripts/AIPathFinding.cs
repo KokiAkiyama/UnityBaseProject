@@ -73,16 +73,16 @@ public class AIPathFinding : MonoBehaviour
     /// <param name="limitRange">制限距離</param>
     /// <returns>指定された目的地に（再計算無しで）到着できるか</returns>
 
-    public bool CalcCornersFromRange(ref Vector3 destPos,ref List<Vector3> corners,float limitRange, out float totalDistance)
+    public bool CalcRouteFromRange(ref Vector3 destPos,ref List<Vector3> corners,float limitRange, out float totalDistance)
     {
         //経路を計算
-        CalcCorners(ref corners,ref destPos);
+        CalcRoute(ref corners,ref destPos);
         //制限距離に応じて再計算
-        return ReCalcCornersFromRange(ref corners,ref destPos,transform.position,limitRange,out totalDistance);
+        return ReCalcRouteFromRange(ref corners,ref destPos,transform.position,limitRange,out totalDistance);
     }
 
     //経路計算
-    bool CalcCorners(ref List<Vector3> corners,ref Vector3 destPos)
+    bool CalcRoute(ref List<Vector3> corners,ref Vector3 destPos)
     {
         NavMeshPath path = new NavMeshPath();
         bool canArrive=NavMesh.CalculatePath(transform.position,destPos,NavMesh.AllAreas,path);
@@ -123,7 +123,7 @@ public class AIPathFinding : MonoBehaviour
     public bool CanMoveInRange(Vector3 destPos,float limitRange)
     {
         List<Vector3> calcCorners=new();
-        CalcCorners(ref calcCorners,ref destPos);
+        CalcRoute(ref calcCorners,ref destPos);
         if (calcCorners.Count <= 0){return false;}
 
         Vector3 prevPos=transform.position;
@@ -154,7 +154,7 @@ public class AIPathFinding : MonoBehaviour
     /// <param name="nowPos">現在のエージェントの座標</param>
     /// <param name="limitRange">移動可能距離</param>
     /// <param name="totalDistance">算出された移動距離</param>
-    public static bool ReCalcCornersFromRange(ref List<Vector3> corners,ref Vector3 resultPos,Vector3 nowPos,float limitRange,out float totalDistance)
+    public static bool ReCalcRouteFromRange(ref List<Vector3> corners,ref Vector3 resultPos,Vector3 nowPos,float limitRange,out float totalDistance)
     {
         bool isArrivable = true;
 
@@ -225,7 +225,7 @@ public class AIPathFinding : MonoBehaviour
     {
         //制限距離に応じて経路を計算
         List<Vector3> calcCorners=new();
-        CalcCornersFromRange(ref destPos,ref calcCorners,limitRange,out float totalDistance);
+        CalcRouteFromRange(ref destPos,ref calcCorners,limitRange,out float totalDistance);
         //結果を描画
         Gizmos.color = color;
         Gizmos.DrawWireSphere(destPos, 0.2f);

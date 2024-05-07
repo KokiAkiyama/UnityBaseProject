@@ -4,6 +4,8 @@ using System.Linq;
 using UnityEngine;
 using Utility.MathEx;
 using UniRx;
+using Utility.UnityEngineEx;
+using System;
 
 public class PlayerController : Group
 {
@@ -17,10 +19,10 @@ public class PlayerController : Group
     LayerMask stageLayer;
 
     [SerializeField]
-    private ReactiveCollection<CharacterBrain> selectedList = new();
+    private ReactiveProperty<CharacterBrain> selectedCharacter = new(null);
 
     [SerializeField] Material controlMaterial;
-    //ƒŒƒ“ƒ_ƒ‰[‚Ìî•ñ‚ğ•Û‘¶‚·‚é
+    //ï¿½ï¿½ï¿½ï¿½ï¿½_ï¿½ï¿½ï¿½[ï¿½Ìï¿½ï¿½ï¿½Û‘ï¿½ï¿½ï¿½ï¿½ï¿½
     public class RendererStrage
     {
         public RendererStrage(List<Material> mats, List<Renderer> rends)
@@ -34,123 +36,166 @@ public class PlayerController : Group
     }
     Dictionary<CharacterBrain, RendererStrage> rendererDic = new();
 
+    [SerializeField]GameObject destPosGuidePrefab;
+    GameObject destPosGuide=null;
+
+    Vector3 mouseRayHitPos=new();
+
+    RaycastEx mouseRaycast=new();
+
+
+
     //===================================================
-    //UnityƒCƒxƒ“ƒg
+    //Unityã‚¤ãƒ™ãƒ³ãƒˆé–¢æ•°
     //===================================================
     void Start()
     {
-        selectedList.
-        ObserveAdd().
-        Subscribe(characterBrain =>
+        destPosGuide=Instantiate(destPosGuidePrefab, transform);
+        
+        destPosGuide.SetActive(false);
+
+        selectedCharacter
+        .Zip(selectedCharacter.Skip(1),(Old,New)=>new{Old,New})
+        .Subscribe(selectCharacterPair=>
         {
-            SetSelectMaterial(characterBrain.Value);
-
-        }).AddTo(this);
-
-        selectedList.ObserveReset().
-            Subscribe(_ =>
+            if(selectCharacterPair.New)
             {
-                foreach (var pair in rendererDic)
-                {
-                    ResetMaterials(pair.Key);
-                }
+                SetSelectMaterial(selectCharacterPair.New);
+            }
+            else
+            {
+                ResetMaterials(selectCharacterPair.Old);
+            }
+        });
 
+        // selectedCharacter.
+        // Where(character=>character!=null).
+        // Subscribe(characterBrain =>
+        // {
+        //     SetSelectMaterial(characterBrain);
 
-            }).AddTo(this);
+        // }).AddTo(this);
 
-        selectedList.
-        ObserveRemove().
-        Subscribe(characterBrain =>
-        {
-            ResetMaterials(characterBrain.Value);
+        // selectedCharacter.
+        // SkipLatestValueOnSubscribe().
+        // Where(character=>character==null).
+        // Scan((prev,now)=>
+        // {
+        //     if(prev!=null)
+        //     {
+        //         ResetMaterials(prev);
+        //     }
 
-        }).AddTo(this);
+        //     return prev;
+
+        // });
 
     }
 
     //===================================================
-    //UnityƒCƒxƒ“ƒg
+    //Unityï¿½Cï¿½xï¿½ï¿½ï¿½g
     //===================================================
     void Update()
     {
+        UpdateMouseRay();
         SelectCharacter();
         MoveCharacter();
+        UpdateDestPosGuide();
     }
 
     //===================================================
-    //ŒÅ—L
+    //ç‹¬è‡ª
     //===================================================
+
+    void UpdateMouseRay()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        
+        mouseRaycast.Raycast(ray,Mathf.Infinity,stageLayer | controlLayer);
+
+        if (mouseRaycast.IsHit == false) { return; }
+
+
+        List<RaycastHit> hitsInfo=null;
+
+        if (mouseRaycast.GetHitInfoFromLayer(controlLayer,out hitsInfo))
+        {
+            
+            var character = hitsInfo.First().collider.GetComponent<CharacterBrain>();
+            mouseRayHitPos=character.transform.position;
+        }
+
+        else if (mouseRaycast.GetHitInfoFromLayer(stageLayer,out hitsInfo))
+        {
+            mouseRayHitPos=hitsInfo.First().point;
+        }
+
+        
+    }
+
     void SelectCharacter()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            selectedList.Clear();
-
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            bool isHit = Physics.Raycast(
-                 ray: ray,
-                 hitInfo: out RaycastHit hit,
-                 maxDistance: Mathf.Infinity,
-                 layerMask: controlLayer
-             );
-
-            if (isHit)
+            
+            if (mouseRaycast.IsHit==false)
             {
-                var character = hit.collider.GetComponent<CharacterBrain>();
-                if (character && character.MainObjectData.GroupID == groupID
-                && selectedList.Contains(character) == false)
-                {
-                    selectedList.Add(character);
-                }
-
-
+                selectedCharacter.Value=null;
+                return;
             }
+
+            if(mouseRaycast.GetHitInfoFromLayer(controlLayer,out var hitCharacters)==false)
+            {
+                selectedCharacter.Value=null;
+                return;
+            }
+            
+            var character = hitCharacters.First().collider.GetComponent<CharacterBrain>();
+            if (character && character.MainObjectData.GroupID == groupID)
+            {
+                selectedCharacter.Value=character;
+            }
+
+
+            
         }
     }
 
     void MoveCharacter()
     {
-        if (selectedList.Count <= 0) return;
+        if (selectedCharacter==null) return;
         if (actives.CanControl == false) return;
         if (GameManager.Instance.TurnManager.ActiveGroupID != groupID) { return; }
         if (GameManager.Instance.InputManager.Game["CamRotButton"].IsPressed()) { return; }
         if (Input.GetMouseButtonDown(1))
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            bool isHit = Physics.Raycast(
-             ray: ray,
-             hitInfo: out RaycastHit hit,
-             maxDistance: Mathf.Infinity,
-             layerMask: stageLayer | controlLayer,
-             queryTriggerInteraction: QueryTriggerInteraction.Collide
-         );
+            
 
-            if (isHit == false) { return; }
+            if (mouseRaycast.IsHit == false) { return; }
 
-
-            if (MathEx.ContainsLayerInMask(hit.collider.gameObject.layer, stageLayer))
+            
+            var hitNear=mouseRaycast.HitsInfo.First();
+            
+            if (MathEx.ContainsLayerInMask(hitNear.collider.gameObject.layer,controlLayer))
             {
-                foreach (var selected in selectedList)
-                {
-                    selected.AIInputProvider.SetDestination(hit.point);
-                }
-            }
-            else if (MathEx.ContainsLayerInMask(hit.collider.gameObject.layer, controlLayer))
-            {
-                var character = hit.collider.GetComponent<CharacterBrain>();
+                var character = hitNear.collider.GetComponent<CharacterBrain>();
                 if (character.MainObjectData.IsEnemies(groupID))
                 {
-                    foreach (var selected in selectedList)
-                    {
-                        selected.AIInputProvider.Target.Value = character;
-                    }
+
+                    selectedCharacter.Value.AIInputProvider.Target.Value = character;
                 }
             }
+            
+            else if (MathEx.ContainsLayerInMask(hitNear.collider.gameObject.layer,stageLayer))
+            {
+                
+                selectedCharacter.Value.AIInputProvider.SetDestination(hitNear.point);
+            }
+            
         }
 
     }
 
-    //ƒAƒEƒgƒ‰ƒCƒ“—p‚ÌƒŒƒCƒ„[Ø‚è‘Ö‚¦
     void SetLayer(GameObject go, int layer)
     {
         go.layer = layer;
@@ -199,12 +244,35 @@ public class PlayerController : Group
         }
     }
 
+    void UpdateDestPosGuide()
+    {
+        if(selectedCharacter.Value==null || mouseRaycast.IsHitLayer(stageLayer)==false)
+        {
+            if(destPosGuide.activeSelf)
+            {
+                destPosGuide.SetActive(false);
+            }
+            return;
+        }
+
+        if(destPosGuide.activeSelf==false)
+        {
+            destPosGuide.SetActive(true);
+        }
+        
+        Vector3 destPos=mouseRayHitPos;
+        List<Vector3> corners=new();
+        selectedCharacter.Value
+        .AIInputProvider.CalcRouteFromRange(ref destPos,ref corners,out float totalDistance);
+        destPosGuide.transform.position=destPos;
+    }
+
     //===================================================
-    //ƒMƒYƒ‚
+    //Gizmo
     //===================================================
     private void OnDrawGizmos()
     {
-        if (selectedList.Count <= 0) { return; }
+        if (selectedCharacter.Value==null) { return; }
 
         Gizmos.color = Color.blue;
 
@@ -242,21 +310,19 @@ public class PlayerController : Group
             return;
         }
 
-        foreach (var selected in selectedList)
-        {
-            Color color = Color.blue;
-            bool isActionCharacters = GameManager.Instance.TurnManager.IsActionCharacter(selected);
-            if (isActionCharacters == false)
-            {
-                color = Color.red;
-            }
-            else if (actives.CanControl == false && actives.ActiveControls.Contains(selected) == false)
-            {
-                color = Color.red;
-            }
 
-            selected.DrawGizmosCalceCorners(destPos, color);
+        Color color = Color.blue;
+        bool isActionCharacters = GameManager.Instance.TurnManager.IsActionCharacter(selectedCharacter.Value);
+        if (isActionCharacters == false)
+        {
+            color = Color.red;
         }
+        else if (actives.CanControl == false && actives.ActiveControls.Contains(selectedCharacter.Value) == false)
+        {
+            color = Color.red;
+        }
+        selectedCharacter.Value.DrawGizmosCalceCorners(destPos, color);
+        
 
     }
 
