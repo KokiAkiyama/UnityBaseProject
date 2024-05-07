@@ -215,13 +215,14 @@ namespace Utility.UnityEngineEx
 			isActive = false;
 		}
 	}
-
+	
 	public class RaycastEx
     {
         List<RaycastHit> hitsInfo=new();
         public List<RaycastHit> HitsInfo=>hitsInfo;
         public bool IsHit=>hitsInfo.Count>0;
 		
+		public RaycastHit HitInfoNear=>hitsInfo.First();
 
         public void Raycast(Ray ray,float maxDistance,LayerMask layerMask,QueryTriggerInteraction queryTriggerInteraction=QueryTriggerInteraction.Collide)
         {
@@ -269,6 +270,74 @@ namespace Utility.UnityEngineEx
 
 			return results.Count>0;
 		}
+
+    }
+	[Serializable]
+	/// <summary>
+	/// レンダラー管理
+	/// </summary>
+	
+	public class RendererStrage
+    {
+        public RendererStrage(List<Material> mats, List<Renderer> rends)
+        {
+            materials = mats;
+            renderers = rends;
+        }
+        public List<Material> materials;
+        public List<Renderer> renderers;
+
+		[SerializeField]
+		DictionaryEx<Material,Material> ReplacedDic=new();
+        /// <summary>
+        /// 引数以下のレンダラーを全て取得
+        /// </summary>
+        /// <param name="rendererParent"></param>
+        public void SetRenderers(GameObject rendererParent)
+        {
+            renderers=rendererParent.GetComponentsInChildren<Renderer>().ToList();
+
+        }
+        /// <summary>
+        /// 前のマテリアルを自動で保存
+        /// </summary>
+        /// <param name="material"></param>
+        public void SetMaterials(Material material)
+        {
+            if(materials.Count>0){return;}
+
+			
+            foreach(var renderer in renderers)
+            {
+                materials.Add(renderer.material);
+
+				if(ReplacedDic.Count > 0)
+				{
+					if(ReplacedDic.ContainsKey(renderer.material))
+					{
+						renderer.material=ReplacedDic[renderer.material];
+						continue;
+					}
+					
+				}
+				
+				renderer.material=material; 
+				
+                
+            }
+        }
+        /// <summary>
+        /// 保存された前のマテリアルを復元
+        /// </summary>
+        public void ResetMaterials()
+        {
+            foreach(Material old in materials)
+            {
+                renderers[materials.IndexOf(old)].material=old;
+            }
+
+			materials.Clear();
+        }
 
     }
 }

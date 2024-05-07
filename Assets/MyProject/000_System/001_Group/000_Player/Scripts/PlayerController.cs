@@ -23,21 +23,11 @@ public class PlayerController : Group
 
     [SerializeField] Material controlMaterial;
     //�����_���[�̏���ۑ�����
-    public class RendererStrage
-    {
-        public RendererStrage(List<Material> mats, List<Renderer> rends)
-        {
-            materials = mats;
-            renderers = rends;
-        }
-        public List<Material> materials;
-        public List<Renderer> renderers;
-
-    }
+    
     Dictionary<CharacterBrain, RendererStrage> rendererDic = new();
 
     [SerializeField]GameObject destPosGuidePrefab;
-    GameObject destPosGuide=null;
+    DestPosGuide destPosGuide=null;
 
     Vector3 mouseRayHitPos=new();
 
@@ -50,9 +40,9 @@ public class PlayerController : Group
     //===================================================
     void Start()
     {
-        destPosGuide=Instantiate(destPosGuidePrefab, transform);
+        destPosGuide=Instantiate(destPosGuidePrefab, transform).GetComponent<DestPosGuide>();
         
-        destPosGuide.SetActive(false);
+        destPosGuide.enabled=false;
 
         selectedCharacter
         .Zip(selectedCharacter.Skip(1),(Old,New)=>new{Old,New})
@@ -246,25 +236,40 @@ public class PlayerController : Group
 
     void UpdateDestPosGuide()
     {
-        if(selectedCharacter.Value==null || mouseRaycast.IsHitLayer(stageLayer)==false)
+        if(selectedCharacter.Value==null || mouseRaycast.IsHit==false)
         {
-            if(destPosGuide.activeSelf)
+            if(destPosGuide.enabled)
             {
-                destPosGuide.SetActive(false);
+                destPosGuide.enabled=false;
             }
             return;
         }
 
-        if(destPosGuide.activeSelf==false)
+        if(destPosGuide.enabled==false)
         {
-            destPosGuide.SetActive(true);
+            destPosGuide.enabled=true;
         }
         
+        var target=mouseRaycast.HitInfoNear;
+
+        //敵に照準が合っているか
+        if(MathEx.ContainsLayerInMask(target.collider.gameObject.layer, controlLayer))
+        {
+            var character=target.collider.GetComponent<CharacterBrain>();
+            destPosGuide.SetToAttackMode(character.MainObjectData.IsEnemies(GroupID));
+        }
+        else
+        {
+            destPosGuide.SetToAttackMode(false);
+        }
+
         Vector3 destPos=mouseRayHitPos;
         List<Vector3> corners=new();
         selectedCharacter.Value
         .AIInputProvider.CalcRouteFromRange(ref destPos,ref corners,out float totalDistance);
         destPosGuide.transform.position=destPos;
+
+        
     }
 
     //===================================================
