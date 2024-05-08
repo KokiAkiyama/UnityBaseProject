@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 6707750800359329263}
   - component: {fileID: 488905090252863165}
   - component: {fileID: 3541644010056494152}
-  - component: {fileID: 3874131519819642124}
   m_Layer: 0
   m_Name: SceneViewCamera
   m_TagString: MainCamera
@@ -154,24 +153,3 @@ MonoBehaviour:
   wheelSpeed: 1824
   moveSpeed: 8.5
   rotateSpeed: 0.3
---- !u!114 &3874131519819642124
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5132623821197228844}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 37e0f06ce18e84f6aa166840c1febb10, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  groupID: 1
-  selectLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  stageLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  selectMaterial: {fileID: 2100000, guid: 266d745742ad944b29467f6a00c17c5b, type: 2}
-  ActiveControls: []
