@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,7 +13,7 @@ namespace Utility.MathEx
             return ((mask >> layer) & 1) == 1;
         }
 
-        //ƒJ[ƒ\ƒ‹‚©‚çƒŒƒC‚ğ”ò‚Î‚µA“–‚½‚Á‚½‚©‚Ç‚¤‚©‚ğ•Ô‚·
+        //ï¿½Jï¿½[ï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½çƒŒï¿½Cï¿½ï¿½ï¿½Î‚ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½Ô‚ï¿½
         public static bool RayCast(out RaycastHit hitInfo, LayerMask layer)
         {
             return Physics.Raycast(
@@ -47,5 +48,11 @@ namespace Utility.MathEx
         {
             return new Vector3(a.x - b.x, a.y - b.y, a.z - b.z);
         }
+
+        public static bool RoundEqual(float a,float b,int decimals)
+        {
+            return Math.Round(a,decimals)==Math.Round(b,decimals);
+        }
+
     }
 };
