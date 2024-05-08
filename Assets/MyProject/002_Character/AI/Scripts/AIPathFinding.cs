@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -166,7 +167,7 @@ public class AIPathFinding : MonoBehaviour
             if (totalDistance!=0f && totalDistance > limitRange)
             {
                 //目的地までの移動限界座標の算出
-                float resultDist = limitRange - totalDistance;
+                float resultDist = totalDistance-limitRange;
                 Vector3 moveDir = (resultPos - nowPos).normalized;
                 resultPos = nowPos + (moveDir * resultDist);
                 totalDistance = limitRange;
