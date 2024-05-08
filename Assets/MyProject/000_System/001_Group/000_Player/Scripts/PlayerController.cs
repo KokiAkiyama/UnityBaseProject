@@ -155,7 +155,7 @@ public class PlayerController : Group
 
     void MoveCharacter()
     {
-        if (selectedCharacter==null) return;
+        if (selectedCharacter.Value==null) return;
         if (actives.CanControl == false && actives.Contains(selectedCharacter.Value)==false) return;
         if (GameManager.Instance.TurnManager.ActiveGroupID != groupID) { return; }
         if (GameManager.Instance.InputManager.Game["CamRotButton"].IsPressed()) { return; }
@@ -275,7 +275,7 @@ public class PlayerController : Group
         var target=mouseRaycast.HitInfoNear;
 
         //敵に照準が合っているか
-        if(MathEx.ContainsLayerInMask(target.collider.gameObject.layer, controlLayer))
+        if(MathEx.ContainsLayerInMask(target.collider.gameObject.layer, controlLayer) && isArrive)
         {
             var character=target.collider.GetComponent<CharacterBrain>();
             destPosGuide.ChangeFlg.Value=character.MainObjectData.IsEnemies(GroupID);
