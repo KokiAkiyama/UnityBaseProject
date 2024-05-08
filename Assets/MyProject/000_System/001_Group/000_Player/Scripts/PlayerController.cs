@@ -270,6 +270,7 @@ public class PlayerController : Group
         routeGuideRenderer.positionCount = corners.Count;
         routeGuideRenderer.SetPositions(corners.ToArray());
 
+        routeGuideRenderer.transform.rotation=selectedCharacter.Value.transform.rotation;   
 
         var target=mouseRaycast.HitInfoNear;
 
