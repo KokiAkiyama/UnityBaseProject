@@ -80,6 +80,6 @@ public class CharacterManager : MonoBehaviour
     {
         Search(groupID,ref result);
         result.RemoveAll(character=>character==originCharacter);
-        result.OrderBy(character=>(character.transform.position-originCharacter.transform.position).magnitude);
+        result=result.OrderBy(character=>(character.transform.position-originCharacter.transform.position).magnitude).ToList();
     }
 }
