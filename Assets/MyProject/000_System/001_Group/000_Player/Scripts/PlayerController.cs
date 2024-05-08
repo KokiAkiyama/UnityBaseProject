@@ -264,7 +264,7 @@ public class PlayerController : Group
         .AIInputProvider.CalcRouteFromRange(ref destPos,ref corners,out float totalDistance);
         destPosGuide.transform.position=destPos;
         //経路描画
-        //corners.Reverse();
+        corners.Reverse();
         corners.Select(i=>i+=new Vector3(0f,0.01f,0f));//ラインの埋没を回避
 
         routeGuideRenderer.positionCount = corners.Count;
