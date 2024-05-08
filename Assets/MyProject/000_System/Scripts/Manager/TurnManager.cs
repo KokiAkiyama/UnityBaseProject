@@ -5,6 +5,9 @@ using UnityEngine;
 using Utility.SystemEx;
 using UniRx;
 using UniRx.Triggers;
+using Cysharp.Threading;
+using Cysharp.Threading.Tasks;
+using System;
 public class TurnManager : MonoBehaviour
 {
 
@@ -38,6 +41,10 @@ public class TurnManager : MonoBehaviour
     /// <param name="character"></param>
     /// <returns></returns>
     public bool IsActionCharacter(CharacterBrain character)=>actionCharacters.Contains(character);
+    /// <summary>
+    /// ゲーム開始直後の不具合を避けるための待機時間が終了しているか
+    /// </summary>
+    bool isEndWaitTime=false;
 
     /// <summary>
     /// 陣営ごとの行動順を作成
@@ -123,8 +130,11 @@ public class TurnManager : MonoBehaviour
         }
     }
 
-    void Start()
+    async void Start()
     {
+        await UniTask.Delay(TimeSpan.FromSeconds(1));
+
+
         //参照先が存在しない要素を削除
         this.UpdateAsObservable()
         .Subscribe(_=>
@@ -156,11 +166,15 @@ public class TurnManager : MonoBehaviour
             activeGroupID=flg;
 
         });
+
+
+        isEndWaitTime=true;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(isEndWaitTime==false){return;}
         AdvanceTurn();
     }
 }
