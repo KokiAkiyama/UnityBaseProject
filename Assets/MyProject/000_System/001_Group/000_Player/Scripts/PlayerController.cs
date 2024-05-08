@@ -52,11 +52,12 @@ public class PlayerController : Group
             if(selectCharacterPair.New)
             {
                 SetSelectMaterial(selectCharacterPair.New);
+                
             }
-            else
-            {
-                ResetMaterials(selectCharacterPair.Old);
-            }
+
+            if(selectCharacterPair.Old==null){return;}
+
+            ResetMaterials(selectCharacterPair.Old);
         });
 
         // selectedCharacter.
@@ -254,6 +255,18 @@ public class PlayerController : Group
             destPosGuide.enabled=true;
         }
         
+        
+
+        Vector3 destPos=mouseRayHitPos;
+        List<Vector3> corners=new();
+        bool isArrive=selectedCharacter.Value
+        .AIInputProvider.CalcRouteFromRange(ref destPos,ref corners,out float totalDistance);
+        destPosGuide.transform.position=destPos;
+        corners.Reverse();
+        corners.Add(destPos);
+        routeGuideRenderer.SetPositions(corners.ToArray());
+
+
         var target=mouseRaycast.HitInfoNear;
 
         //敵に照準が合っているか
@@ -266,15 +279,6 @@ public class PlayerController : Group
         {
             destPosGuide.ToAttackMode.Value=false;
         }
-
-        Vector3 destPos=mouseRayHitPos;
-        List<Vector3> corners=new();
-        selectedCharacter.Value
-        .AIInputProvider.CalcRouteFromRange(ref destPos,ref corners,out float totalDistance);
-        destPosGuide.transform.position=destPos;
-        corners.Reverse();
-        corners.Add(destPos);
-        routeGuideRenderer.SetPositions(corners.ToArray());
     }
 
     //===================================================
