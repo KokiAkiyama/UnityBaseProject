@@ -238,6 +238,7 @@ public class PlayerController : Group
 
     void UpdateDestPosGuide()
     {
+        routeGuideRenderer.positionCount = 0;
         
         if(selectedCharacter.Value==null || mouseRaycast.IsHit==false)
         {
@@ -248,7 +249,7 @@ public class PlayerController : Group
             return;
         }
 
-        routeGuideRenderer.positionCount = 0;
+        
 
         if(destPosGuide.enabled==false)
         {
@@ -262,8 +263,11 @@ public class PlayerController : Group
         bool isArrive=selectedCharacter.Value
         .AIInputProvider.CalcRouteFromRange(ref destPos,ref corners,out float totalDistance);
         destPosGuide.transform.position=destPos;
-        corners.Reverse();
-        corners.Add(destPos);
+        //経路描画
+        //corners.Reverse();
+        corners.Select(i=>i+=new Vector3(0f,0.01f,0f));//ラインの埋没を回避
+
+        routeGuideRenderer.positionCount = corners.Count;
         routeGuideRenderer.SetPositions(corners.ToArray());
 
 
