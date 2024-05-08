@@ -156,7 +156,7 @@ public class PlayerController : Group
     void MoveCharacter()
     {
         if (selectedCharacter==null) return;
-        if (actives.CanControl == false) return;
+        if (actives.CanControl == false && actives.Contains(selectedCharacter.Value)==false) return;
         if (GameManager.Instance.TurnManager.ActiveGroupID != groupID) { return; }
         if (GameManager.Instance.InputManager.Game["CamRotButton"].IsPressed()) { return; }
         if (Input.GetMouseButtonDown(1))

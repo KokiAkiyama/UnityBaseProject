@@ -31,6 +31,7 @@ public class ActiveSelector : MonoBehaviour
 
     public bool CanControl=>activeControls.Count<=0;
 
+    public bool Contains(CharacterBrain character)=>activeControls.Contains(character); 
 
     // Update is called once per frame
     void Update()
