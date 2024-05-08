@@ -209,6 +209,7 @@ public class AIPathFinding : MonoBehaviour
                 resultPos=prevPos+(moveDir*resultDist);
                 totalDistance = limitRange;
                 isArrivable = false;
+                corners.Add(resultPos);
                 break;
             }
             totalDistance+=distance;
@@ -230,9 +231,15 @@ public class AIPathFinding : MonoBehaviour
         Gizmos.color = color;
         Gizmos.DrawWireSphere(destPos, 0.2f);
         Vector3 prevPos = destPos;
-        
+        bool isFirst=true;
         foreach(var pos in calcCorners)
         {
+            if(isFirst)
+            {
+                isFirst=false;
+                continue;
+            }
+
             Gizmos.DrawLine(prevPos, pos);
             prevPos = pos;
         }
