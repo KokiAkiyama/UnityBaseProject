@@ -6,26 +6,25 @@ using UnityEngine;
 using UniRx.Triggers;
 using UniRx;
 
-public class DestPosGuide : MonoBehaviour
+public class MaterialReplacer : MonoBehaviour
 {
-    Material defaultMaterial;
-    [SerializeField] Material toAttackMaterial;
+    [SerializeField] Material replaceMaterial;
     [SerializeField]RendererStrage rendererStrage=new(new(),new());
     
-    public BoolReactiveProperty ToAttackMode=new(false);
+    public BoolReactiveProperty ChangeFlg=new(false);
 
     // Start is called before the first frame update
     void Start()
     {
         rendererStrage.SetRenderers(gameObject);
 
-        ToAttackMode.
+        ChangeFlg.
         SkipLatestValueOnSubscribe()
         .Subscribe(isActive=>
         {
             if(isActive)
             {
-                rendererStrage.SetMaterials(toAttackMaterial);
+                rendererStrage.SetMaterials(replaceMaterial);
             }
             else
             {

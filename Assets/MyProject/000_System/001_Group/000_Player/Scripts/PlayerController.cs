@@ -27,7 +27,7 @@ public class PlayerController : Group
     Dictionary<CharacterBrain, RendererStrage> rendererDic = new();
 
     [SerializeField]GameObject destPosGuidePrefab;
-    DestPosGuide destPosGuide=null;
+    MaterialReplacer destPosGuide=null;
 
     Vector3 mouseRayHitPos=new();
 
@@ -41,7 +41,7 @@ public class PlayerController : Group
     //===================================================
     void Start()
     {
-        destPosGuide=Instantiate(destPosGuidePrefab, transform).GetComponent<DestPosGuide>();
+        destPosGuide=Instantiate(destPosGuidePrefab, transform).GetComponent<MaterialReplacer>();
         
         destPosGuide.enabled=false;
 
@@ -239,7 +239,7 @@ public class PlayerController : Group
     void UpdateDestPosGuide()
     {
         routeGuideRenderer.positionCount = 0;
-        
+
         if(selectedCharacter.Value==null || mouseRaycast.IsHit==false)
         {
             if(destPosGuide.enabled)
@@ -277,11 +277,11 @@ public class PlayerController : Group
         if(MathEx.ContainsLayerInMask(target.collider.gameObject.layer, controlLayer))
         {
             var character=target.collider.GetComponent<CharacterBrain>();
-            destPosGuide.ToAttackMode.Value=character.MainObjectData.IsEnemies(GroupID);
+            destPosGuide.ChangeFlg.Value=character.MainObjectData.IsEnemies(GroupID);
         }
         else
         {
-            destPosGuide.ToAttackMode.Value=false;
+            destPosGuide.ChangeFlg.Value=false;
         }
     }
 

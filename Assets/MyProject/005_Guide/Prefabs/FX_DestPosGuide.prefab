@@ -236,7 +236,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 721c6eef5ae5c49608c79850c074db33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  toAttackMaterial: {fileID: 2100000, guid: d210ab4530b06204982c8e178bde8566, type: 2}
+  replaceMaterial: {fileID: 2100000, guid: d210ab4530b06204982c8e178bde8566, type: 2}
   rendererStrage:
     materials: []
     renderers: []
@@ -248,7 +248,7 @@ MonoBehaviour:
         Value: {fileID: 2100000, guid: 6e1be9979acd14c62a7d50f847172c06, type: 2}
       - Key: {fileID: 6363972876524433418}
         Value: {fileID: 2100000, guid: 5c7b4d7607f4a4133970425585c32178, type: 2}
-  ToAttackMode:
+  ChangeFlg:
     value: 0
 --- !u!1 &6363972877764928592
 GameObject:
