@@ -5,7 +5,9 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
-using static UnityEditor.PlayerSettings;
+using UniRx;
+using UniRx.Triggers;
+using Utility.MathEx;
 
 [RequireComponent(typeof(NavMeshAgent))]
 
@@ -18,16 +20,28 @@ public class AIPathFinding : MonoBehaviour
     {
         get
         {
+            if(isActiveAndEnabled==false){return false;}
             //パス計算中
             if (navAgent.pathPending) return false;
             //止まっている
             if(navAgent.isStopped) return true;
-            
+            //目的地を通り過ぎた場合は停止
+            if(MathEx.RoundEqual(navAgent.remainingDistance,remainingDistancePrev,2)==false &&
+                navAgent.remainingDistance>remainingDistancePrev)return true;
+
             return navAgent.remainingDistance <= navAgent.stoppingDistance;
         }
     }
 
     public Vector3 DesiredVelecity => navAgent.desiredVelocity;
+
+    float remainingDistancePrev=0f;
+
+    /// <summary>
+    /// 最大移動速度よりも多きく座標が変化した場合はワープしたと見なす
+    /// </summary>
+    bool IsWarp=>Mathf.Abs(navAgent.remainingDistance-remainingDistancePrev)>navAgent.speed;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -40,6 +54,18 @@ public class AIPathFinding : MonoBehaviour
 
         navAgent.isStopped = true;
 
+
+        remainingDistancePrev=0f;
+
+        //パス計算完了時
+        this.ObserveEveryValueChanged(_=>navAgent.pathPending)
+        .Skip(1)
+        .Subscribe(isPending=>
+        {
+            if(isPending){return;}
+            remainingDistancePrev=navAgent.remainingDistance;
+        }).AddTo(this);
+
     }
     public void Stop()
     {
@@ -50,12 +76,21 @@ public class AIPathFinding : MonoBehaviour
         //パス計算中
         if (navAgent.pathPending) return;
 
+        //ワープした場合は残り移動距離の値をリセットする
+        if(IsWarp)
+        {
+            remainingDistancePrev=navAgent.remainingDistance;
+        }
+
         //到着している
         if(IsAlived)
         {
             navAgent.isStopped = true;
         }
-
+        if(isActiveAndEnabled)
+        {
+            remainingDistancePrev=navAgent.remainingDistance;
+        }
 
         //エージェントの座標更新
         navAgent.nextPosition = transform.position;   
@@ -65,6 +100,7 @@ public class AIPathFinding : MonoBehaviour
     {
         navAgent.isStopped = false;
         navAgent.SetDestination(position);
+        remainingDistancePrev=navAgent.remainingDistance;
     }
     /// <summary>
     ///  制限距離を加味した目的地に変換
