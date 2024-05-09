@@ -200,7 +200,7 @@ GameObject:
   - component: {fileID: 6363972876970291528}
   - component: {fileID: 4536363106667721814}
   m_Layer: 0
-  m_Name: FX_DestPosGuide
+  m_Name: FX_GuidemagicCIrcle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -248,7 +248,7 @@ MonoBehaviour:
         Value: {fileID: 2100000, guid: 6e1be9979acd14c62a7d50f847172c06, type: 2}
       - Key: {fileID: 6363972876524433418}
         Value: {fileID: 2100000, guid: 5c7b4d7607f4a4133970425585c32178, type: 2}
-  ChangeFlg:
+  ChangeRP:
     value: 0
 --- !u!1 &6363972877764928592
 GameObject:
