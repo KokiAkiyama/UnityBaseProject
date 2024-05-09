@@ -129,7 +129,6 @@ public class AIBrain : Group
 
     bool WaitForEndActive()
     {
-        if(isActive==false){return false;}
         if (isWaiting==false)
         {   
             var character=GameManager.Instance.TurnManager.ActionCharacters[SystemEx.ClampRangeIndex(idx-1,GameManager.Instance.TurnManager.ActionCharacters)];
