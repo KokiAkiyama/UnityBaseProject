@@ -32,6 +32,8 @@ public class CharacterBrain : MonoBehaviour
     [SerializeField] float moveSpeed = 2.0f;
     [SerializeField] float rotSpeed = 600.0f;
 
+    public float MoveSpeed => moveSpeed;
+
     const float stopMagnitude = 0.2f;
 
     [SerializeField] MainObjectData mainObjectData;

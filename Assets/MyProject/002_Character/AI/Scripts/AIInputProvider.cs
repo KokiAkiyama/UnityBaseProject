@@ -116,7 +116,9 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
             SetDestination(newTarget.transform.position);
         });
 
-        ownerBrain=GetComponentInParent<CharacterBrain>(); 
+        ownerBrain=GetComponentInParent<CharacterBrain>();
+
+        pathFinding.Speed = ownerBrain.MoveSpeed;
     }
 
 
