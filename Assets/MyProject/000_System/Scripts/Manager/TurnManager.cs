@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -40,7 +40,7 @@ public class TurnManager : MonoBehaviour
     /// </summary>
     /// <param name="character"></param>
     /// <returns></returns>
-    public bool IsActionCharacter(CharacterBrain character)=>actionCharacters.Contains(character);
+    public bool IsActionCharacter(CharacterBrain character)=> character && actionCharacters.Contains(character) && character.IsDead==false;
     /// <summary>
     /// ゲーム開始直後の不具合を避けるための待機時間が終了しているか
     /// </summary>
@@ -55,6 +55,11 @@ public class TurnManager : MonoBehaviour
         if(GameManager.Instance.CharacterManager.Characters.Count<=0){return;}
        
         turnList.Clear();
+
+        //キャラクターリストから死亡したものを除外
+        GameManager.Instance.CharacterManager.RemoveDeadCharacter();
+
+
         //キャラクターリストを取得（敏捷力ソート済み）
         var characters=GameManager.Instance.CharacterManager.Characters;
         List<CharacterBrain> turn=new();

@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -149,7 +149,7 @@ public class PlayerController : Group
             }
             
             var character = hitCharacters.First().collider.GetComponent<CharacterBrain>();
-            if (character && character.MainObjectData.GroupID == groupID)
+            if (character && character.MainObjectData.GroupID == groupID && character.IsDead==false)
             {
                 selectedCharacter.Value=character;
             }

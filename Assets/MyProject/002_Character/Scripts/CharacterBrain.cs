@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
@@ -124,6 +124,7 @@ public class CharacterBrain : MonoBehaviour
         this.ObserveEveryValueChanged(_=>IsActionTurn)
         .Subscribe(value =>
         {
+            if (IsDead) return;
             turnGuide.gameObject.SetActive(value);
         });
         

@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UniRx;
@@ -38,6 +38,14 @@ public class CharacterManager : MonoBehaviour
         OderByTurnCharacterList();
     }
 
+    public void RemoveDeadCharacter()
+    {
+        characters.RemoveAll(character =>
+        {
+            if (character == null) return true;
+            return character.IsDead;
+        });
+    }
     void Start()
     {
         this.UpdateAsObservable()

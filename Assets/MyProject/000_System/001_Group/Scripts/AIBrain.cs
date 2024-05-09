@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
@@ -89,8 +89,9 @@ public class AIBrain : Group
 
             ++idx;
 
+            if (character.IsDead) continue;
             
-            if(isWaiting)return;;
+            if(isWaiting)return;
 
             SearchEnemy(character);
             
