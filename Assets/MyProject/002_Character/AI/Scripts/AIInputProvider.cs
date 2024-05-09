@@ -172,6 +172,12 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
                 return;
             }
 
+            if(AIInputProvider.Target.Value!=null && AIInputProvider.CheckAttack())
+            {
+                AIInputProvider.ChangeState(StateType.Wait);
+                return;
+            }
+
             if(AIInputProvider.IsDamage)
             {
                 AIInputProvider.ChangeState(StateType.Damage);
