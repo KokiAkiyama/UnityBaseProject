@@ -284,8 +284,8 @@ namespace Utility.UnityEngineEx
             materials = mats;
             renderers = rends;
         }
-        public List<Material> materials;
-        public List<Renderer> renderers;
+        public List<Material> materials=new();
+        public List<Renderer> renderers=new();
 
 		[SerializeField]
 		DictionaryEx<GameObject,Material> ReplacedDic=new();
@@ -302,8 +302,9 @@ namespace Utility.UnityEngineEx
         /// 前のマテリアルを自動で保存
         /// </summary>
         /// <param name="material"></param>
-        public void SetMaterials(Material material)
+        public void SetMaterials()
         {
+			
             if(materials.Count>0){return;}
 
 			
@@ -316,13 +317,9 @@ namespace Utility.UnityEngineEx
 					if(ReplacedDic.ContainsKey(renderer.gameObject))
 					{
 						renderer.material=ReplacedDic[renderer.gameObject];
-						continue;
 					}
 					
 				}
-				
-				renderer.material=material; 
-				
                 
             }
         }

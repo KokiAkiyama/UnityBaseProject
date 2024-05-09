@@ -8,23 +8,22 @@ using UniRx;
 
 public class MaterialReplacer : MonoBehaviour
 {
-    [SerializeField] Material replaceMaterial;
     [SerializeField]RendererStrage rendererStrage=new(new(),new());
     
-    public BoolReactiveProperty ChangeFlg=new(false);
+    public BoolReactiveProperty ChangeRP=new(false);
 
     // Start is called before the first frame update
     void Start()
     {
         rendererStrage.SetRenderers(gameObject);
 
-        ChangeFlg.
+        ChangeRP.
         SkipLatestValueOnSubscribe()
         .Subscribe(isActive=>
         {
             if(isActive)
             {
-                rendererStrage.SetMaterials(replaceMaterial);
+                rendererStrage.SetMaterials();
             }
             else
             {

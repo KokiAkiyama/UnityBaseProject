@@ -39,16 +39,21 @@ public class CharacterBrain : MonoBehaviour
 
     public BoolReactiveProperty IsTurnEnd=new(false);
 
+    public bool IsActiveTurn=>GameManager.Instance.TurnManager.ActionCharacters.Contains(this);
     [SerializeField] CharacterIDs ID;
     
     [SerializeField]CharacterData turnMaxParam;
 
     [SerializeField] CharacterData param;
+
+    [SerializeField] MaterialReplacer turnGuide;
+
+    public BoolReactiveProperty IsSelectedRP=new(false);
+
     public CharacterData Param{get=>param;set=>param=value;}
     DamageParam attackParam=new();
 
     public bool IsDead=>param.HP<=0;
-
     public void AddRootMotionDelta(ref Vector3 v)
     {
         rootMotionDaltaPosition += v;
@@ -90,6 +95,8 @@ public class CharacterBrain : MonoBehaviour
         }
         );
         //ターン開始時と終了時の処理
+        
+
         IsTurnEnd
         .SkipLatestValueOnSubscribe()
         .Subscribe(value =>
@@ -107,12 +114,24 @@ public class CharacterBrain : MonoBehaviour
                 //ターン終了時
 
                 AIInputProvider.EndTurn();
-
             }
         }
         
         );
+        //ガイドの表示非表示切り替え
+        this.ObserveEveryValueChanged(_=>IsActiveTurn)
+        .Subscribe(value =>
+        {
+            turnGuide.gameObject.SetActive(value);
+        });
         
+        IsSelectedRP
+        .Subscribe(isSelected=>
+        {
+            if(IsActiveTurn==false){return;}
+
+            turnGuide.ChangeRP.Value=isSelected;
+        });
 
 
         //キャラクターマネージャーに登録

@@ -51,14 +51,20 @@ public class PlayerController : Group
         {
             if(selectCharacterPair.New)
             {
-                SetSelectMaterial(selectCharacterPair.New);
+                selectCharacterPair.New.IsSelectedRP.Value=true;
                 
             }
 
-            if(selectCharacterPair.Old==null){return;}
+            if(selectCharacterPair.Old)
+            {
+                selectCharacterPair.Old.IsSelectedRP.Value=false;
+            }
 
-            ResetMaterials(selectCharacterPair.Old);
+
         });
+
+
+
 
         // selectedCharacter.
         // Where(character=>character!=null).
@@ -278,11 +284,11 @@ public class PlayerController : Group
         if(MathEx.ContainsLayerInMask(target.collider.gameObject.layer, controlLayer) && isArrive)
         {
             var character=target.collider.GetComponent<CharacterBrain>();
-            destPosGuide.ChangeFlg.Value=character.MainObjectData.IsEnemies(GroupID);
+            destPosGuide.ChangeRP.Value=character.MainObjectData.IsEnemies(GroupID);
         }
         else
         {
-            destPosGuide.ChangeFlg.Value=false;
+            destPosGuide.ChangeRP.Value=false;
         }
     }
 
