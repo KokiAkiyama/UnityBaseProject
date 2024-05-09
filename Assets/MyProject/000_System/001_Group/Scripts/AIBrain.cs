@@ -6,6 +6,9 @@ using Cysharp.Threading.Tasks;
 using System.Linq;
 using System;
 using UnityEngine.TextCore.Text;
+using Utility.MathEx;
+using Utility.UnityEngineEx;
+using Utility.SystemEx;
 
 /// <summary>
 /// 特定の陣営を指揮するAI
@@ -32,7 +35,11 @@ public class AIBrain : Group
         .Subscribe(id=>
         {
             isActive=(id==groupID);
-
+            if(isActive)
+            {
+                isWaiting=false;
+                idx=0;
+            }
         }).AddTo(this);
         //行動が終了した場合、即ターンエンドフラグをオンに
         actives.OnEndActiveControlRP
@@ -42,45 +49,55 @@ public class AIBrain : Group
         {
             if(character.MainObjectData.GroupID==groupID && isActive)
             {
-                character.IsTurnEnd.Value=true;
+                isWaiting=false;
                 
             }
         }).AddTo(this);
     }
-    
-    async void Update()
+    int idx=0;
+    void Update()
     {
         if(isActive==false)return;
 
 
         var turnManager=GameManager.Instance.TurnManager;
         CharacterBrain character=null;
-        int idx=0;
+
+
         while (true)
         {
+            
             ////============================
             ////行動終了まで待機
             ////============================
-            await WaitForEndActive(character);
+            if(WaitForEndActive())
+            {
+                return;
+            }
+            
+            
             
             if(idx>=turnManager.ActionCharacters.Count)
             {
+                idx=0;
+
                 break;
             }
 
-            character=turnManager.ActionCharacters[idx];
             
+            character=turnManager.ActionCharacters[idx];
+
             ++idx;
 
-            if(character==null)continue;
             
-            if(isWaiting==false && character.IsTurnEnd.Value==false)
-            {
-                SearchEnemy(character);
-            }
+            if(isWaiting)return;;
+
+            SearchEnemy(character);
+            
+            return;
         }
 
-
+        isActive=false;
         
     }
 
@@ -110,31 +127,17 @@ public class AIBrain : Group
     }
 
 
-    async UniTask WaitForEndActive(CharacterBrain character)
+    bool WaitForEndActive()
     {
-        if(character==null){return;}
-
-        var cancelToken = this.GetCancellationTokenOnDestroy();
-
-        while (cancelToken.IsCancellationRequested == false)
-        {
-            if (character.IsTurnEnd.Value)
-            {
-                isWaiting=false;
-                break;
-            }
-
-            try
-            {
-                await UniTask.DelayFrame(1, cancellationToken: cancelToken);
-            }
-            catch (OperationCanceledException oce)
-            {
-                Debug.Log(oce.Message);
-                return;
-            }
-            
-            
+        if(isActive==false){return false;}
+        if (isWaiting==false)
+        {   
+            var character=GameManager.Instance.TurnManager.ActionCharacters[SystemEx.ClampRangeIndex(idx-1,GameManager.Instance.TurnManager.ActionCharacters)];
+            character.IsTurnEnd.Value=true;
+            return false;
         }
+
+        return true;
+            
     }
 }

@@ -7,7 +7,7 @@ namespace Utility.SystemEx
 	public static class SystemEx
 	{
 
-		public static int ClampRangeIndex<L>(int idx, ref List<L> list)
+		public static int ClampRangeIndex<L>(int idx, List<L> list)
 		{
 			return Mathf.Clamp(idx, 0, list.Count - 1);
 		}

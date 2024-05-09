@@ -162,7 +162,7 @@ public class PlayerController : Group
     void MoveCharacter()
     {
         if (selectedCharacter.Value==null) return;
-        if (actives.CanControl == false && actives.Contains(selectedCharacter.Value)==false) return;
+        if (actives.CanControl == false && actives.IsControl(selectedCharacter.Value)==false) return;
         if (GameManager.Instance.TurnManager.ActiveGroupID != groupID) { return; }
         if (GameManager.Instance.InputManager.Game["CamRotButton"].IsPressed()) { return; }
         if (Input.GetMouseButtonDown(1))
@@ -186,7 +186,7 @@ public class PlayerController : Group
             
             else if (MathEx.ContainsLayerInMask(hitNear.collider.gameObject.layer,stageLayer))
             {
-                
+                selectedCharacter.Value.AIInputProvider.Target.Value=null;
                 selectedCharacter.Value.AIInputProvider.SetDestination(hitNear.point);
             }
             
