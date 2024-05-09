@@ -39,7 +39,7 @@ public class CharacterBrain : MonoBehaviour
 
     public BoolReactiveProperty IsTurnEnd=new(false);
 
-    public bool IsActiveTurn=>GameManager.Instance.TurnManager.ActionCharacters.Contains(this);
+    public bool IsActionTurn=>GameManager.Instance.TurnManager.ActionCharacters.Contains(this);
     [SerializeField] CharacterIDs ID;
     
     [SerializeField]CharacterData turnMaxParam;
@@ -119,7 +119,7 @@ public class CharacterBrain : MonoBehaviour
         
         );
         //ガイドの表示非表示切り替え
-        this.ObserveEveryValueChanged(_=>IsActiveTurn)
+        this.ObserveEveryValueChanged(_=>IsActionTurn)
         .Subscribe(value =>
         {
             turnGuide.gameObject.SetActive(value);
@@ -128,7 +128,7 @@ public class CharacterBrain : MonoBehaviour
         IsSelectedRP
         .Subscribe(isSelected=>
         {
-            if(IsActiveTurn==false){return;}
+            if(IsActionTurn==false){return;}
 
             turnGuide.ChangeRP.Value=isSelected;
         });
