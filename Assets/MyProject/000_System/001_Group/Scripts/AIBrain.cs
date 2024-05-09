@@ -36,6 +36,17 @@ public class AIBrain : Group
             if (isActive) isTurnFirstFlame = true;
 
         }).AddTo(this);
+        //行動が終了した場合、即ターンエンドフラグをオンに
+        actives.OnEndActiveControlRP
+        .SkipLatestValueOnSubscribe()
+        .Where(character=>character!=null)
+        .Subscribe(character=>
+        {
+            if(character.MainObjectData.GroupID==groupID && isActive)
+            {
+                character.IsTurnEnd.Value=true;
+            }
+        }).AddTo(this);
     }
     
     async void Update()
@@ -46,15 +57,22 @@ public class AIBrain : Group
         foreach (var character in turnManager.ActionCharacters)
         {
             if(character==null)continue;
+            if(character.IsTurnEnd.Value)continue;
+            
+            
 
+            if(character.IsTurnEnd.Value==false) 
+            {
+                SearchEnemy(character);
+            }
+            
+            
             ////============================
             ////行動終了まで待機
             ////============================
             await WaitForEndActive(character);
+            
 
-            SearchEnemy(character);
-
-            //controlCharacter.IsTurnEnd.Value=true;
         }
 
 
@@ -93,11 +111,7 @@ public class AIBrain : Group
 
         while (cancelToken.IsCancellationRequested == false)
         {
-            if (isTurnFirstFlame)
-            {
-                isTurnFirstFlame = false;
-                break;
-            }
+            
 
             try
             {
@@ -108,12 +122,11 @@ public class AIBrain : Group
                 Debug.Log(oce.Message);
                 return;
             }
-
-            if (actives.CanControl)
+            if (character.IsTurnEnd.Value)
             {
-                character.IsTurnEnd.Value = true;
                 break;
             }
+            
         }
     }
 }
