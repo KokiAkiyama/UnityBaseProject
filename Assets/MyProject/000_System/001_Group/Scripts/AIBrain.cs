@@ -17,7 +17,7 @@ public class AIBrain : Group
     /// <summary>
     /// ターン開始時の1フレーム目か
     /// </summary>
-    bool isTurnFirstFlame = true;
+    bool isWaiting = false;
 
     //===================================================
     //Unityイベント
@@ -33,8 +33,6 @@ public class AIBrain : Group
         {
             isActive=(id==groupID);
 
-            if (isActive) isTurnFirstFlame = true;
-
         }).AddTo(this);
         //行動が終了した場合、即ターンエンドフラグをオンに
         actives.OnEndActiveControlRP
@@ -45,6 +43,7 @@ public class AIBrain : Group
             if(character.MainObjectData.GroupID==groupID && isActive)
             {
                 character.IsTurnEnd.Value=true;
+                
             }
         }).AddTo(this);
     }
@@ -53,26 +52,32 @@ public class AIBrain : Group
     {
         if(isActive==false)return;
 
-        var turnManager=GameManager.Instance.TurnManager;
-        foreach (var character in turnManager.ActionCharacters)
-        {
-            if(character==null)continue;
-            if(character.IsTurnEnd.Value)continue;
-            
-            
 
-            if(character.IsTurnEnd.Value==false) 
-            {
-                SearchEnemy(character);
-            }
-            
-            
+        var turnManager=GameManager.Instance.TurnManager;
+        CharacterBrain character=null;
+        int idx=0;
+        while (true)
+        {
             ////============================
             ////行動終了まで待機
             ////============================
             await WaitForEndActive(character);
             
+            if(idx>=turnManager.ActionCharacters.Count)
+            {
+                break;
+            }
 
+            character=turnManager.ActionCharacters[idx];
+            
+            ++idx;
+
+            if(character==null)continue;
+            
+            if(isWaiting==false && character.IsTurnEnd.Value==false)
+            {
+                SearchEnemy(character);
+            }
         }
 
 
@@ -100,18 +105,24 @@ public class AIBrain : Group
 
         character.AIInputProvider.Target.Value=enemies.First();
 
-
+        isWaiting=true;
         
     }
 
 
     async UniTask WaitForEndActive(CharacterBrain character)
     {
+        if(character==null){return;}
+
         var cancelToken = this.GetCancellationTokenOnDestroy();
 
         while (cancelToken.IsCancellationRequested == false)
         {
-            
+            if (character.IsTurnEnd.Value)
+            {
+                isWaiting=false;
+                break;
+            }
 
             try
             {
@@ -122,10 +133,7 @@ public class AIBrain : Group
                 Debug.Log(oce.Message);
                 return;
             }
-            if (character.IsTurnEnd.Value)
-            {
-                break;
-            }
+            
             
         }
     }
