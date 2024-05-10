@@ -254,6 +254,8 @@ MonoBehaviour:
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
+  DOScalePer: 1.5
+  DOScaleDuration: 0.5
 --- !u!1 &1975013173632613994
 GameObject:
   m_ObjectHideFlags: 0
@@ -517,7 +519,7 @@ MonoBehaviour:
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
-  m_ReverseArrangement: 1
+  m_ReverseArrangement: 0
 --- !u!114 &5632480222066927398
 MonoBehaviour:
   m_ObjectHideFlags: 0
