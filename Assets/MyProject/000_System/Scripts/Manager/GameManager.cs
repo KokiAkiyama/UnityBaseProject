@@ -12,6 +12,10 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] TurnManager turnManager;
     public TurnManager TurnManager => turnManager;
+
+    [SerializeField] UIManager uIManager;
+    public UIManager UIManager => uIManager;
+    
     // Start is called before the first frame update
     void Awake()
     {

@@ -21,6 +21,8 @@ public class CharacterManager : MonoBehaviour
 
     public CharacterData GetChatacrerData(CharacterIDs id) => database.GetChatacrerData(id);
 
+    public DictionaryEx<MainObjectData.GroupIDs,Color> GroupColorDic=new();
+
     public void Copy(ref CharacterData copiedData,CharacterIDs id)=>database.Copy(ref copiedData,id);
 
     void OderByTurnCharacterList()

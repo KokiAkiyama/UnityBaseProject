@@ -55,7 +55,7 @@ public class TurnManager : MonoBehaviour
         if(GameManager.Instance.CharacterManager.Characters.Count<=0){return;}
        
         turnList.Clear();
-
+        
         //キャラクターリストから死亡したものを除外
         GameManager.Instance.CharacterManager.RemoveDeadCharacter();
 
@@ -131,6 +131,8 @@ public class TurnManager : MonoBehaviour
         {
             character.IsTurnEnd.Value = false;
         }
+        //ポートレートUI作成
+        GameManager.Instance.UIManager.PortraitController.Create(turnList);
 
         //ターンの進行を通知
         //(一周したときに同じ陣営のターンになることを想定し、同じ値でも通知する）
