@@ -79,8 +79,10 @@ public class AIBrain : Group
             
             if(idx>=turnManager.ActionCharacters.Count)
             {
+                character=GameManager.Instance.TurnManager.ActionCharacters[SystemEx.ClampRangeIndex(idx-1,GameManager.Instance.TurnManager.ActionCharacters)];
+                character.IsTurnEnd.Value=true;
                 idx=0;
-
+            
                 break;
             }
 
@@ -132,8 +134,6 @@ public class AIBrain : Group
     {
         if (isWaiting==false)
         {   
-            var character=GameManager.Instance.TurnManager.ActionCharacters[SystemEx.ClampRangeIndex(idx-1,GameManager.Instance.TurnManager.ActionCharacters)];
-            character.IsTurnEnd.Value=true;
             return false;
         }
 
