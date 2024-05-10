@@ -5,9 +5,8 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.AddressableAssets;
 using UniRx.Triggers;
 using UniRx;
-using TMPro;
-using UnityEngine.UI;
-using Utility.SystemEx;
+using UnityEngine.UI; 
+using DG.Tweening;
 public class PortraitController : MonoBehaviour
 {
     List<CharacterPortrait> list=new();
@@ -15,6 +14,13 @@ public class PortraitController : MonoBehaviour
     [SerializeField]AssetReferenceGameObject portraitAssetPrefab;
 
     AsyncOperationHandle<GameObject> assetHandle=new();
+
+    
+    Dictionary<CharacterPortrait,Tween> actionPortraitDic=new();
+
+    [SerializeField] float DOScalePer=1.5f;
+    [SerializeField] float DOScaleDuration=0.5f;
+
     public void Create(List<List<CharacterBrain>> trunLsit)
     {
         Cear();
@@ -41,6 +47,7 @@ public class PortraitController : MonoBehaviour
             return true;
         });
     }
+
     
     // Start is called before the first frame update
     void Awake()
@@ -55,6 +62,39 @@ public class PortraitController : MonoBehaviour
        {
             Addressables.Release(assetHandle);
        });
+       
+    }
+
+    void Start()
+    {
+        //ターン中のキャラクターを強調表示
+        GameManager.Instance.TurnManager.TurnChangeRP
+        .SkipLatestValueOnSubscribe()
+        .Subscribe(_=>
+        {
+            foreach(var actionPair in actionPortraitDic)
+            {
+                actionPair.Value.Kill();
+
+                if(actionPair.Key)
+                {
+                    actionPair.Key.transform.localScale = Vector3.one;
+                }
+            }
+            actionPortraitDic.Clear();
+
+            var trunManager=GameManager.Instance.TurnManager;
+            foreach(var portrait in list)
+            {
+                if(trunManager.IsActionCharacter(portrait.Character)==false)continue;
+                Sequence seq = DOTween.Sequence();
+                seq.Append(portrait.RectTransform.DOScale(Vector3.one*DOScalePer,DOScaleDuration));
+            
+                actionPortraitDic[portrait]=seq;
+            }
+
+
+        }).AddTo(this);
     }
 
     // Update is called once per frame
