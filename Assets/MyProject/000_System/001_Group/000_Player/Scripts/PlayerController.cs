@@ -171,9 +171,19 @@ public class PlayerController : Group
 
             if (mouseRaycast.IsHit == false) { return; }
 
+            //死亡したキャラクターを除外
+            mouseRaycast.HitsInfo.RemoveAll(hitInfo=>
+            {
+                if (MathEx.ContainsLayerInMask(hitInfo.collider.gameObject.layer,controlLayer))
+                {
+                    var character = hitInfo.collider.GetComponent<CharacterBrain>();
+                    return character.IsDead;
+                }
+                return false;
+            });
             
             var hitNear=mouseRaycast.HitsInfo.First();
-            
+
             if (MathEx.ContainsLayerInMask(hitNear.collider.gameObject.layer,controlLayer))
             {
                 var character = hitNear.collider.GetComponent<CharacterBrain>();
