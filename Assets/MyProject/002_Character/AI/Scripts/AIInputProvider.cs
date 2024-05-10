@@ -136,6 +136,7 @@ public class AIInputProvider : MonoBehaviour, IInputProvider
     public void EndTurn()
     {
         Target.Value=null;
+        pathFinding.Stop();
     }
     
     public bool CalcRouteFromRange(ref Vector3 destPos,ref List<Vector3> corners,out float totalDistance)=>pathFinding.CalcRouteFromRange(ref destPos,ref corners,ownerBrain.Param.ActionRange,out totalDistance);

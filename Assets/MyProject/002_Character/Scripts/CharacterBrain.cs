@@ -114,7 +114,7 @@ public class CharacterBrain : MonoBehaviour
             else
             {
                 //ターン終了時
-
+                EndActiveControl();
                 AIInputProvider.EndTurn();
             }
         }
