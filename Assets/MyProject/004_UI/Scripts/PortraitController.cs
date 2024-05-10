@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.AddressableAssets;
@@ -20,6 +21,13 @@ public class PortraitController : MonoBehaviour
 
     [SerializeField] float DOScalePer=1.5f;
     [SerializeField] float DOScaleDuration=0.5f;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public ReactiveProperty<CharacterBrain> SelectedPortraitCharacter=new();
+
+    [SerializeField]Color SelectedColor=Color.white;
 
     public void Create(List<List<CharacterBrain>> trunLsit)
     {
@@ -95,6 +103,42 @@ public class PortraitController : MonoBehaviour
 
 
         }).AddTo(this);
+
+
+        SelectedPortraitCharacter
+        .Zip(SelectedPortraitCharacter.Skip(1),(Old,New)=>new{Old,New})
+        .Subscribe(selectCharacterPair=>
+        {
+
+
+
+            if(selectCharacterPair.New)
+            {
+                list.Select(portrait=>
+                {
+                    if(portrait.Character==selectCharacterPair.New)
+                    {
+                        portrait.SetSelectedColor(SelectedColor);
+                    }
+                    return portrait;
+                });
+                
+            }
+
+            if(selectCharacterPair.Old)
+            {
+                list.Select(portrait=>
+                {
+                    if(portrait.Character==selectCharacterPair.Old)
+                    {
+                        portrait.ResetColor();
+                    }
+                    return portrait;
+                });
+            }
+
+
+        });
     }
 
     // Update is called once per frame
@@ -102,6 +146,5 @@ public class PortraitController : MonoBehaviour
     {
         list.RemoveAll(portrait=>portrait==null);
     }
-
 
 }

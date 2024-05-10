@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx.Triggers;
 using UniRx;
+using UnityEngine.TextCore.Text;
 
 
 public class Group:MonoBehaviour
@@ -21,4 +22,28 @@ public class Group:MonoBehaviour
 
     public void EndActveControl(CharacterBrain character)=>actives.EndActveControl(character);
 
+
+    protected virtual void Start()
+    {
+        //選択されているキャラクターをUIに反映
+        selectedCharacter
+        .SkipLatestValueOnSubscribe()
+        .Subscribe(character=>
+        {
+            if(GameManager.Instance.TurnManager.ActiveGroupID!=groupID)return;
+            GameManager.Instance.UIManager.PortraitController
+            .SelectedPortraitCharacter.Value=character;
+
+        }).AddTo(this);
+
+        GameManager.Instance.TurnManager.TurnChangeRP
+        .SkipLatestValueOnSubscribe()
+        .Subscribe(turnGroupID=>
+        {
+            if(turnGroupID!=groupID)return;
+
+            GameManager.Instance.UIManager.PortraitController
+            .SelectedPortraitCharacter.Value=selectedCharacter.Value;
+        }).AddTo(this);
+    }
 }

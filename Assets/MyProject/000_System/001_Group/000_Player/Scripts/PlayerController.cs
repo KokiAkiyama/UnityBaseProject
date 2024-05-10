@@ -37,8 +37,9 @@ public class PlayerController : Group
     //===================================================
     //Unityイベント関数
     //===================================================
-    void Start()
+    protected override void Start()
     {
+        base.Start();
         destPosGuide=Instantiate(destPosGuidePrefab, transform).GetComponent<MaterialReplacer>();
         
         destPosGuide.enabled=false;

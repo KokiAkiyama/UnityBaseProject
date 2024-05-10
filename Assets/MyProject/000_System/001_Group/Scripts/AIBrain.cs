@@ -26,9 +26,9 @@ public class AIBrain : Group
     //Unityイベント
     //===================================================
 
-    void Start()
+    protected override void Start()
     {
-        
+        base.Start();
 
         GameManager.Instance.TurnManager
         .TurnChangeRP

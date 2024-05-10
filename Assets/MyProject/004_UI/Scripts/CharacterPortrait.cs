@@ -16,6 +16,14 @@ public class CharacterPortrait : MonoBehaviour
     public ReactiveProperty<CharacterBrain> characterRP=new(null);
     public CharacterBrain Character{get=>characterRP.Value;set=>characterRP.Value=value;}
 
+    Color originFrameColor;
+
+
+
+    public void SetSelectedColor(Color color)=>frame.color=color;  
+
+    public void ResetColor()=>frame.color=GameManager.Instance.CharacterManager.GroupColorDic[Character.MainObjectData.GroupID];
+
     void Awake()
     {
         characterRP
@@ -25,8 +33,12 @@ public class CharacterPortrait : MonoBehaviour
         {
             image.sprite=character.Param.Sprite;
             frame.color=GameManager.Instance.CharacterManager.GroupColorDic[character.MainObjectData.GroupID];
+
+            
         });
 
         rectTransform=GetComponent<RectTransform>();
     }
+
+    
 }
