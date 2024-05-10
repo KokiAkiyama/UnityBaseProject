@@ -61,7 +61,6 @@ public class AIBrain : Group
 
 
         var turnManager=GameManager.Instance.TurnManager;
-        CharacterBrain character=null;
 
 
         while (true)
@@ -76,8 +75,8 @@ public class AIBrain : Group
             }
             else if(idx>0)
             {
-                character=GameManager.Instance.TurnManager.ActionCharacters[SystemEx.ClampRangeIndex(idx-1,GameManager.Instance.TurnManager.ActionCharacters)];
-                character.IsTurnEnd.Value=true;
+                selectedCharacter.Value=GameManager.Instance.TurnManager.ActionCharacters[SystemEx.ClampRangeIndex(idx-1,GameManager.Instance.TurnManager.ActionCharacters)];
+                selectedCharacter.Value.IsTurnEnd.Value=true;
             }
             
             
@@ -91,15 +90,15 @@ public class AIBrain : Group
             }
 
             
-            character=turnManager.ActionCharacters[idx];
+            selectedCharacter.Value=turnManager.ActionCharacters[idx];
 
             ++idx;
 
-            if (character.IsDead) continue;
+            if (selectedCharacter.Value.IsDead) continue;
             
             if(isWaiting)return;
 
-            SearchEnemy(character);
+            SearchEnemy(selectedCharacter.Value);
             
             return;
         }

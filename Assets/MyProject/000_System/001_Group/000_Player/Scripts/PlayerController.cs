@@ -18,9 +18,7 @@ public class PlayerController : Group
     [SerializeField]
     LayerMask stageLayer;
 
-    [SerializeField]
-    private ReactiveProperty<CharacterBrain> selectedCharacter = new(null);
-
+    
     [SerializeField] Material controlMaterial;
     //�����_���[�̏���ۑ�����
     
