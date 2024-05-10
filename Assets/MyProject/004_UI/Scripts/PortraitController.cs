@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -114,27 +114,25 @@ public class PortraitController : MonoBehaviour
 
             if(selectCharacterPair.New)
             {
-                list.Select(portrait=>
+                foreach(var portrait in list)
                 {
                     if(portrait.Character==selectCharacterPair.New)
                     {
                         portrait.SetSelectedColor(SelectedColor);
                     }
-                    return portrait;
-                });
+                }
                 
             }
 
             if(selectCharacterPair.Old)
             {
-                list.Select(portrait=>
+                foreach (var portrait in list)
                 {
-                    if(portrait.Character==selectCharacterPair.Old)
+                    if (portrait.Character==selectCharacterPair.Old)
                     {
                         portrait.ResetColor();
                     }
-                    return portrait;
-                });
+                }
             }
 
 
